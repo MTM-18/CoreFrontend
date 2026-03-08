@@ -1,268 +1,268 @@
-// src/compnents/sections/CoreProComponents/programPage.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-
+import type { ComponentType, ReactNode } from "react";
 import {
-    FaTruck,
-    FaIndustry,
-    FaShoppingCart,
     FaBrain,
-    FaLaptopCode,
-    FaHeartbeat,
     FaBullhorn,
-    FaPenNib,
+    FaCalculator,
     FaCamera,
     FaCode,
-    FaCalculator,
-    FaVideo,
-    FaTasks,
     FaCouch,
-    FaFeatherAlt
+    FaFeatherAlt,
+    FaHandshake,
+    FaHeartbeat,
+    FaIndustry,
+    FaLaptopCode,
+    FaPenNib,
+    FaRocket,
+    FaShoppingCart,
+    FaTasks,
+    FaTruck,
+    FaVideo,
 } from "react-icons/fa";
 
 const program1Logos = Object.values(
     import.meta.glob("/src/assets/logo/studentLogos/program1/*.{png,jpg,jpeg,webp,svg}", {
         eager: true,
-        import: "default"
+        import: "default",
     })
 ) as string[];
 
 const program2Logos = Object.values(
     import.meta.glob("/src/assets/logo/studentLogos/program2/*.{png,jpg,jpeg,webp,svg}", {
         eager: true,
-        import: "default"
+        import: "default",
     })
 ) as string[];
 
 const program3Logos = Object.values(
     import.meta.glob("/src/assets/logo/studentLogos/program3/*.{png,jpg,jpeg,webp,svg}", {
         eager: true,
-        import: "default"
+        import: "default",
     })
 ) as string[];
 
 type TabKey = "vocational" | "advanced" | "internship" | "entrepreneurship";
-
 type Stat = { value: string; label: string };
 type Quote = { name: string; text: string };
 type Stage = { title: string; desc: string };
 
+function SectionCard({ title, children }: { title?: string; children: ReactNode }) {
+    return (
+        <section className="rounded-3xl border border-black/8 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/5 md:p-6">
+            {title ? (
+                <h3 className="mb-4 text-lg font-semibold text-core-textDark dark:text-core-textLight">{title}</h3>
+            ) : null}
+            {children}
+        </section>
+    );
+}
+
+function SimpleGrid({
+                        items,
+                        icons,
+                    }: {
+    items: string[];
+    icons: Array<ComponentType<{ className?: string }>>;
+}) {
+    return (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {items.map((label, index) => {
+                const Icon = icons[index] ?? icons[icons.length - 1];
+                return (
+                    <div
+                        key={`${label}-${index}`}
+                        className="flex items-center gap-3 rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                    >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-core-brand/10 text-core-brand dark:bg-core-textAccent/12 dark:text-core-textAccent">
+                            <Icon className="text-base" />
+                        </div>
+                        <span className="text-sm font-medium leading-6 text-core-textDark dark:text-core-textLight">{label}</span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+function StatsGrid({ stats }: { stats: Stat[] }) {
+    return (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {stats.map((stat, index) => (
+                <div
+                    key={`${stat.label}-${index}`}
+                    className="rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                >
+                    <div className="text-2xl font-semibold text-core-textDark dark:text-core-textLight">{stat.value}</div>
+                    <div className="mt-2 text-sm leading-6 text-core-textMuted dark:text-core-textMutedDark">{stat.label}</div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function LogoGrid({ logos }: { logos: string[] }) {
+    return (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {logos.map((src, index) => (
+                <div
+                    key={`${src}-${index}`}
+                    className="flex aspect-square items-center justify-center rounded-2xl border border-black/8 bg-white p-4 shadow-sm dark:border-white/10"
+                >
+                    <img
+                        src={src}
+                        alt={`logo-${index + 1}`}
+                        loading="lazy"
+                        decoding="async"
+                        className="max-h-full max-w-full object-contain"
+                    />
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function StagesTimeline({ stages }: { stages: Stage[] }) {
+    return (
+        <div className="space-y-4">
+            {stages.map((stage, index) => (
+                <div key={`${stage.title}-${index}`} className="flex gap-4 rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-core-brand text-sm font-semibold text-white dark:bg-core-textAccent dark:text-black">
+                        {index + 1}
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-semibold text-core-textDark dark:text-core-textLight md:text-base">{stage.title}</h4>
+                        <p className="mt-2 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">{stage.desc}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function QuotesGrid({ quotes }: { quotes: Quote[] }) {
+    return (
+        <div className="grid gap-3 md:grid-cols-2">
+            {quotes.map((quote, index) => (
+                <div key={`${quote.name}-${index}`} className="rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5">
+                    <p className="text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">“{quote.text}”</p>
+                    <div className="mt-3 text-sm font-semibold text-core-textDark dark:text-core-textLight">{quote.name}</div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function ComingSoon({ title, body }: { title: string; body: string }) {
+    return (
+        <SectionCard title={title}>
+            <p className="text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">{body}</p>
+        </SectionCard>
+    );
+}
+
 export default function ProgramsPage() {
     const { t, i18n } = useTranslation();
-    const isAr = i18n.language?.startsWith("ar");
-
-    const [active, setActive] = useState<TabKey>("vocational");
+    const isAr = i18n.language.startsWith("ar");
     const baseKey = "coreProPage";
+    const [active, setActive] = useState<TabKey>("vocational");
 
-    // refs for auto-scroll active tab into view on mobile
     const tabRefs = useRef<Record<TabKey, HTMLButtonElement | null>>({
         vocational: null,
         advanced: null,
         internship: null,
-        entrepreneurship: null
+        entrepreneurship: null,
     });
 
     useEffect(() => {
-        tabRefs.current[active]?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center"
-        });
+        tabRefs.current[active]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     }, [active]);
 
-    // Safe array getter (prevents `.map is not a function` when key missing)
     const getArray = <T,>(key: string): T[] => {
-        const v = t(key, { returnObjects: true });
-        return Array.isArray(v) ? (v as T[]) : [];
+        const value = t(key, { returnObjects: true });
+        return Array.isArray(value) ? (value as T[]) : [];
     };
 
     const tabs = useMemo(
-        () =>
-            [
-                { key: "vocational", label: t(`${baseKey}.tabs.vocational`) },
-                { key: "advanced", label: t(`${baseKey}.tabs.advanced`) },
-                { key: "internship", label: t(`${baseKey}.tabs.internship`) },
-                { key: "entrepreneurship", label: t(`${baseKey}.tabs.entrepreneurship`) }
-            ] as { key: TabKey; label: string }[],
+        () => [
+            { key: "vocational" as const, label: t(`${baseKey}.tabs.vocational`) },
+            { key: "advanced" as const, label: t(`${baseKey}.tabs.advanced`) },
+            { key: "internship" as const, label: t(`${baseKey}.tabs.internship`) },
+            { key: "entrepreneurship" as const, label: t(`${baseKey}.tabs.entrepreneurship`) },
+        ],
         [t]
     );
 
+    const allLogos = useMemo(() => [...program1Logos, ...program2Logos, ...program3Logos], []);
+
     return (
-        <section
-            dir={isAr ? "rtl" : "ltr"}
-            className="w-full px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto"
-        >
-            {/* Header */}
-            <div className="mb-6 w-full">
-                <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <section dir={isAr ? "rtl" : "ltr"} className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-0">
+            <div className="mb-8 space-y-3">
+                <h1 className="text-3xl font-semibold tracking-tight text-core-textDark dark:text-core-textLight md:text-4xl">
                     {t(`${baseKey}.title`)}
                 </h1>
-                <p className="mt-2 text-sm opacity-80 max-w-2xl">
+                <p className="max-w-3xl text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark md:text-base">
                     {t(`${baseKey}.subtitle`)}
                 </p>
+            </div>
 
-                {/* Tabs */}
-                <div className="mt-5 w-full flex justify-start sm:justify-center">
-                    <div
-                        role="tablist"
-                        aria-label={t(`${baseKey}.title`)}
-                        className={[
-                            "w-full sm:w-fit",
-                            "flex items-center gap-1",
-                            "rounded-full border border-black/10 dark:border-white/10",
-                            "bg-white/60 dark:bg-white/5 backdrop-blur",
-                            "p-1",
-                            "overflow-x-auto overflow-y-hidden",
-                            "flex-nowrap",
-                            "max-w-full",
-                            "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-                        ].join(" ")}
-                    >
-                        {tabs.map((tab) => {
-                            const on = tab.key === active;
-
-                            return (
-                                <button
-                                    key={tab.key}
-                                    ref={(el) => {
-                                        tabRefs.current[tab.key] = el;
-                                    }}
-                                    type="button"
-                                    role="tab"
-                                    aria-selected={on}
-                                    onClick={() => setActive(tab.key)}
-                                    className={[
-                                        "shrink-0 whitespace-nowrap",
-                                        "px-4 py-2 text-xs sm:text-sm",
-                                        "rounded-full transition",
-                                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-                                        on
-                                            ? "bg-black text-white dark:bg-white dark:text-black shadow-sm"
-                                            : "text-black/80 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10"
-                                    ].join(" ")}
-                                >
-                                    {tab.label}
-                                </button>
-                            );
-                        })}
-                    </div>
+            <div className="mb-6 flex justify-start sm:justify-center">
+                <div className="flex max-w-full gap-2 overflow-x-auto rounded-full border border-black/10 bg-white/70 p-1 dark:border-white/10 dark:bg-white/5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.key}
+                            ref={(el) => {
+                                tabRefs.current[tab.key] = el;
+                            }}
+                            type="button"
+                            onClick={() => setActive(tab.key)}
+                            className={[
+                                "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition",
+                                active === tab.key
+                                    ? "bg-core-brand text-white dark:bg-core-textAccent dark:text-black"
+                                    : "text-core-textDark hover:bg-black/5 dark:text-core-textLight dark:hover:bg-white/10",
+                            ].join(" ")}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* Content */}
             <div className="space-y-4">
                 {active === "vocational" && (
                     <Vocational t={t} getArray={getArray} baseKey={baseKey} />
                 )}
 
                 {active === "entrepreneurship" && (
-                    <Entrepreneurship t={t} getArray={getArray} baseKey={baseKey} />
+                    <Entrepreneurship t={t} getArray={getArray} baseKey={baseKey} logos={allLogos} />
                 )}
 
-                {(active === "advanced" || active === "internship") && (
-                    <ComingSoon t={t} baseKey={baseKey} />
+                {active === "advanced" && (
+                    <ComingSoon
+                        title={t(`${baseKey}.comingSoon.title`)}
+                        body={t(`${baseKey}.comingSoon.desc`)}
+                    />
+                )}
+
+                {active === "internship" && (
+                    <ComingSoon
+                        title={t(`${baseKey}.comingSoon.title`)}
+                        body={t(`${baseKey}.comingSoon.desc`)}
+                    />
                 )}
             </div>
         </section>
     );
 }
 
-/* ------------------------ UI helpers ------------------------ */
-
-function Card({
-    title,
-    children
-}: {
-    title?: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-4 sm:p-5 shadow-sm">
-            {title ? <div className="text-sm font-semibold">{title}</div> : null}
-            <div className={title ? "mt-3" : ""}>{children}</div>
-        </div>
-    );
-}
-
-function StatsGrid({ stats }: { stats: Stat[] }) {
-    if (!stats.length) return null;
-
-    return (
-        <div className="w-full min-w-0">
-            {/* ✅ Mobile: wrap grid (no horizontal scroll) */}
-            <div className="grid grid-cols-2 gap-3 sm:hidden">
-                {stats.map((s, idx) => (
-                    <div
-                        key={idx}
-                        className="rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-3 min-h-[76px] flex flex-col gap-1"
-                    >
-                        <div className="text-lg font-semibold leading-none">{s.value}</div>
-                        <div className="text-xs opacity-80 leading-snug break-words">
-                            {s.label}
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* ✅ sm+: horizontal rail (2 rows) */}
-            <div
-                className={[
-                    "hidden sm:block w-full",
-                    "overflow-x-auto overflow-y-hidden",
-                    "py-1",
-                    "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-                ].join(" ")}
-            >
-                <div
-                    className={[
-                        "grid",
-                        "grid-flow-col",
-                        "grid-rows-2",
-                        "gap-3",
-                        "auto-cols-[minmax(180px,1fr)]",
-                        "items-stretch"
-                    ].join(" ")}
-                >
-                    {stats.map((s, idx) => (
-                        <div
-                            key={idx}
-                            className="rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-3 min-h-[76px] flex flex-col gap-1"
-                        >
-                            <div className="text-lg font-semibold leading-none">{s.value}</div>
-                            <div className="text-xs opacity-80 leading-snug break-words">
-                                {s.label}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-/* ------------------------ Tabs content ------------------------ */
-
-function ComingSoon({
-    t,
-    baseKey
-}: {
-    t: (k: string, o?: any) => any;
-    baseKey: string;
-}) {
-    return (
-        <Card title={t(`${baseKey}.comingSoon.title`)}>
-            <p className="text-sm opacity-80">{t(`${baseKey}.comingSoon.desc`)}</p>
-        </Card>
-    );
-}
-
 function Vocational({
-    t,
-    getArray,
-    baseKey
-}: {
-    t: (k: string, o?: any) => any;
-    getArray: <T, >(key: string) => T[];
+                        t,
+                        getArray,
+                        baseKey,
+                    }: {
+    t: (key: string, options?: any) => string;
+    getArray: <T,>(key: string) => T[];
     baseKey: string;
 }) {
     const sectors = getArray<string>(`${baseKey}.vocational.sectors`);
@@ -271,393 +271,83 @@ function Vocational({
 
     return (
         <div className="space-y-4">
-            <Card>
-                <div className="text-xl font-semibold">{t(`${baseKey}.vocational.title`)}</div>
-
-                <p className="mt-2 text-sm opacity-80">
-                    <span className="font-semibold">{t(`${baseKey}.vocational.aboutTitle`)}: </span>
+            <SectionCard>
+                <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight">
+                    {t(`${baseKey}.vocational.title`)}
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">
+                    <span className="font-semibold text-core-textDark dark:text-core-textLight">{t(`${baseKey}.vocational.aboutTitle`)}: </span>
                     {t(`${baseKey}.vocational.about`)}
                 </p>
-            </Card>
+            </SectionCard>
 
-            <div className="grid lg:grid-cols-2 gap-3 sm:gap-4">
-                <Card title={t(`${baseKey}.vocational.sectorsTitle`)}>
-                    <SectorRail
-                        items={sectors}
-                        icons={[
-                            FaBullhorn, // Digital Marketing
-                            FaShoppingCart, // E-commerce
-                            FaPenNib, // Graphic Design
-                            FaCamera, // Photography
-                            FaCode, // Programming
-                            FaCalculator, // Financial Accounting
-                            FaVideo, // Video Production
-                            FaTasks, // Project Management
-                            FaCouch, // Interior Design
-                            FaFeatherAlt // Content Creation
-                        ]}
-                    />
-                </Card>
+            <SectionCard title={t(`${baseKey}.vocational.sectorsTitle`)}>
+                <SimpleGrid
+                    items={sectors}
+                    icons={[FaBullhorn, FaShoppingCart, FaPenNib, FaCamera, FaCode, FaCalculator, FaVideo, FaTasks, FaCouch, FaFeatherAlt]}
+                />
+            </SectionCard>
 
-                <Card title={t(`${baseKey}.vocational.achievementsTitle`)}>
-                    <StatsGrid stats={stats} />
-                </Card>
-            </div>
+            <SectionCard title={t(`${baseKey}.vocational.achievementsTitle`)}>
+                <StatsGrid stats={stats} />
+            </SectionCard>
 
-            {!!testimonials.length && (
-                <Card title={t(`${baseKey}.vocational.testimonialsTitle`)}>
-                    <div className="grid md:grid-cols-2 gap-3">
-                        {testimonials.map((q, idx) => (
-                            <div
-                                key={idx}
-                                className="rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-4"
-                            >
-                                <div className="text-sm font-semibold">{q.name}</div>
-                                <div className="mt-2 text-sm opacity-80">“{q.text}”</div>
-                            </div>
-                        ))}
-                    </div>
-                </Card>
+            {testimonials.length > 0 && (
+                <SectionCard title={t(`${baseKey}.vocational.testimonialsTitle`)}>
+                    <QuotesGrid quotes={testimonials} />
+                </SectionCard>
             )}
         </div>
     );
 }
 
 function Entrepreneurship({
-    t,
-    getArray,
-    baseKey
-}: {
-    t: (k: string, o?: any) => any;
-    getArray: <T, >(key: string) => T[];
+                              t,
+                              getArray,
+                              baseKey,
+                              logos,
+                          }: {
+    t: (key: string, options?: any) => string;
+    getArray: <T,>(key: string) => T[];
     baseKey: string;
+    logos: string[];
 }) {
     const includes = getArray<string>(`${baseKey}.entrepreneurship.includes`);
     const stats = getArray<Stat>(`${baseKey}.entrepreneurship.stats`);
     const sectors = getArray<string>(`${baseKey}.entrepreneurship.sectors`);
-    const cohorts = getArray<string>(`${baseKey}.entrepreneurship.cohorts`);
     const stages = getArray<Stage>(`${baseKey}.entrepreneurship.stages`);
 
     return (
         <div className="space-y-4">
-            <Card>
-                <div className="text-xl font-semibold">{t(`${baseKey}.entrepreneurship.title`)}</div>
-
-                <p className="mt-2 text-sm opacity-80">
-                    <span className="font-semibold">{t(`${baseKey}.entrepreneurship.aboutTitle`)}: </span>
+            <SectionCard>
+                <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight">
+                    {t(`${baseKey}.entrepreneurship.title`)}
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">
+                    <span className="font-semibold text-core-textDark dark:text-core-textLight">{t(`${baseKey}.entrepreneurship.aboutTitle`)}: </span>
                     {t(`${baseKey}.entrepreneurship.about`)}
                 </p>
-            </Card>
+            </SectionCard>
 
-            <div className="grid lg:grid-cols-2 gap-3 sm:gap-4">
-                <Card title={t(`${baseKey}.entrepreneurship.includesTitle`)}>
-                    {includes.length ? (
-                        <ul className="space-y-2 text-sm">
-                            {includes.map((it, idx) => (
-                                <li
-                                    key={idx}
-                                    className="rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 px-3 py-2"
-                                >
-                                    {it}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : null}
-                </Card>
+            <SectionCard title={t(`${baseKey}.entrepreneurship.includesTitle`)}>
+                <SimpleGrid items={includes} icons={[FaRocket, FaHandshake, FaRocket, FaHandshake]} />
+            </SectionCard>
 
-                <Card title={t(`${baseKey}.entrepreneurship.achievementsTitle`)}>
-                    <StatsGrid stats={stats} />
-                </Card>
-            </div>
+            <SectionCard title={t(`${baseKey}.entrepreneurship.achievementsTitle`)}>
+                <StatsGrid stats={stats} />
+            </SectionCard>
 
-            <div className="grid lg:grid-cols-2 gap-3 sm:gap-4">
-                <Card title={t(`${baseKey}.entrepreneurship.sectorsTitle`)}>
-                    <SectorRail
-                        items={sectors}
-                        icons={[FaTruck, FaIndustry, FaShoppingCart, FaBrain, FaLaptopCode, FaHeartbeat]}
-                    />
-                </Card>
+            <SectionCard title={t(`${baseKey}.entrepreneurship.sectorsTitle`)}>
+                <SimpleGrid items={sectors} icons={[FaTruck, FaIndustry, FaShoppingCart, FaBrain, FaLaptopCode, FaHeartbeat]} />
+            </SectionCard>
 
-                <Card title={t(`${baseKey}.entrepreneurship.cohortsTitle`)}>
-                    <CohortAccordion
-                        cohorts={cohorts}
-                        rails={[
-                            { titleFallback: "First Incubation Cohort ", logos: program1Logos },
-                            { titleFallback: "Second Incubation Cohort ", logos: program2Logos },
-                            { titleFallback: "Third Incubation Cohort ", logos: program3Logos }
-                        ]}
-                    />
-                </Card>
-            </div>
+            <SectionCard title={t(`${baseKey}.entrepreneurship.cohortsTitle`)}>
+                <LogoGrid logos={logos} />
+            </SectionCard>
 
-            {!!stages.length && (
-                <Card title={t(`${baseKey}.entrepreneurship.stagesTitle`)}>
-                    <div className="space-y-3">
-                        {stages.map((s, idx) => (
-                            <div
-                                key={idx}
-                                className="rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-4"
-                            >
-                                <div className="text-sm font-semibold">{s.title}</div>
-                                <div className="mt-1 text-sm opacity-80">{s.desc}</div>
-                            </div>
-                        ))}
-                    </div>
-                </Card>
-            )}
-        </div>
-    );
-}
-
-/* ------------------------ Cohorts + Logos ------------------------ */
-
-function LogoRail({ logos }: { logos: string[] }) {
-    const railRef = useRef<HTMLDivElement | null>(null);
-    const drag = useRef({ down: false, startX: 0, startScrollLeft: 0 });
-
-    const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-        const el = railRef.current;
-        if (!el) return;
-
-        drag.current.down = true;
-        drag.current.startX = e.clientX;
-        drag.current.startScrollLeft = el.scrollLeft;
-
-        el.setPointerCapture(e.pointerId);
-        el.style.cursor = "grabbing";
-    };
-
-    const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-        const el = railRef.current;
-        if (!el || !drag.current.down) return;
-
-        const dx = e.clientX - drag.current.startX;
-        el.scrollLeft = drag.current.startScrollLeft - dx;
-    };
-
-    const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-        const el = railRef.current;
-        if (!el) return;
-
-        drag.current.down = false;
-        try {
-            el.releasePointerCapture(e.pointerId);
-        } catch { }
-        el.style.cursor = "grab";
-    };
-
-    if (!logos?.length) return <div className="text-sm opacity-70">No logos yet.</div>;
-
-    return (
-        <div className="w-full min-w-0">
-            {/* ✅ Mobile: grid (no horizontal drag/scroll) */}
-            <div className="grid grid-cols-3 gap-3 sm:hidden">
-                {logos.map((src, idx) => (
-                    <div
-                        key={`${src}-${idx}`}
-                        className={[
-                            "aspect-square",
-                            "rounded-2xl",
-                            "border border-black/10 dark:border-white/10",
-                            "bg-white",
-                            "shadow-sm ring-1 ring-black/5",
-                            "grid place-items-center",
-                            "p-2",
-                            "overflow-hidden"
-                        ].join(" ")}
-                    >
-                        <img
-                            src={src}
-                            alt={`logo-${idx + 1}`}
-                            loading="lazy"
-                            draggable={false}
-                            className="w-full h-full object-contain max-w-[92%] max-h-[92%]"
-                        />
-                    </div>
-                ))}
-            </div>
-
-            {/* ✅ sm+: drag/scroll rail */}
-            <div className="hidden sm:block relative w-full min-w-0 overflow-hidden">
-                <div
-                    ref={railRef}
-                    onPointerDown={onPointerDown}
-                    onPointerMove={onPointerMove}
-                    onPointerUp={endDrag}
-                    onPointerCancel={endDrag}
-                    className={[
-                        "w-full min-w-0",
-                        "flex gap-3",
-                        "overflow-x-auto overflow-y-hidden",
-                        "cursor-grab select-none touch-pan-x",
-                        "py-1 px-1",
-                        "snap-x snap-mandatory",
-                        "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-                    ].join(" ")}
-                >
-                    {logos.map((src, idx) => (
-                        <div
-                            key={`${src}-${idx}`}
-                            className={[
-                                "shrink-0 snap-start",
-                                "h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24",
-                                "rounded-2xl",
-                                "border border-black/10 dark:border-white/10",
-                                "bg-white",
-                                "shadow-sm ring-1 ring-black/5",
-                                "grid place-items-center",
-                                "p-2 sm:p-3",
-                                "overflow-hidden"
-                            ].join(" ")}
-                        >
-                            <img
-                                src={src}
-                                alt={`logo-${idx + 1}`}
-                                loading="lazy"
-                                draggable={false}
-                                className="w-full h-full object-contain max-w-[92%] max-h-[92%]"
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function CohortAccordion({
-    cohorts,
-    rails
-}: {
-    cohorts: string[];
-    rails: { titleFallback: string; logos: string[] }[];
-}) {
-    const { i18n } = useTranslation();
-    const isAr = i18n.language?.startsWith("ar");
-
-    // ✅ mobile-friendly: start closed
-    const [openIdx, setOpenIdx] = useState<number>(-1);
-
-    return (
-        <div className="space-y-2 w-full min-w-0">
-            {rails.map((r, idx) => {
-                const isOpen = openIdx === idx;
-                const title = cohorts?.[idx] ?? r.titleFallback;
-                const count = r.logos?.length ?? 0;
-
-                return (
-                    <div
-                        key={idx}
-                        className="w-full min-w-0 rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 overflow-hidden"
-                    >
-                        <button
-                            type="button"
-                            aria-expanded={isOpen}
-                            onClick={() => setOpenIdx(isOpen ? -1 : idx)}
-                            className={[
-                                "w-full px-4 py-3",
-                                "flex items-center justify-between gap-3",
-                                "text-sm sm:text-base font-semibold",
-                                "hover:bg-black/[0.03] dark:hover:bg-white/[0.07]",
-                                "transition"
-                            ].join(" ")}
-                        >
-                            <div className="flex items-center gap-2 min-w-0">
-                                <span className="truncate">{title}</span>
-                                <span className="shrink-0 text-xs font-medium opacity-70">({count})</span>
-                            </div>
-
-                            <span
-                                className={[
-                                    "shrink-0 text-lg leading-none opacity-70",
-                                    "transition-transform duration-200",
-                                    isOpen ? "rotate-180" : "rotate-0",
-                                    isAr ? "ml-1" : ""
-                                ].join(" ")}
-                                aria-hidden="true"
-                            >
-                                ▾
-                            </span>
-                        </button>
-
-                        {isOpen && (
-                            <div className="px-4 pb-4">
-                                <LogoRail logos={r.logos} />
-                            </div>
-                        )}
-                    </div>
-                );
-            })}
-        </div>
-    );
-}
-
-/* ------------------------ Sectors ------------------------ */
-
-function SectorRail({
-    items,
-    icons
-}: {
-    items: string[];
-    icons: Array<React.ComponentType<{ className?: string }>>;
-}) {
-    if (!items.length) return null;
-
-    return (
-        <div className="w-full min-w-0">
-            {/* ✅ Mobile: normal wrap grid */}
-            <div className="grid grid-cols-1 gap-3 sm:hidden">
-                {items.map((label, idx) => {
-                    const Icon = icons[idx] ?? icons[icons.length - 1];
-
-                    return (
-                        <div
-                            key={idx}
-                            title={label}
-                            className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-3 min-h-[64px] flex items-center gap-3"
-                        >
-                            <Icon className="text-lg opacity-90 shrink-0" />
-                            <div className="text-sm font-medium opacity-90 leading-snug">{label}</div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* ✅ sm+: horizontal rail (2 rows) */}
-            <div
-                className={[
-                    "hidden sm:block w-full",
-                    "overflow-x-auto overflow-y-hidden",
-                    "py-1",
-                    "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-                ].join(" ")}
-            >
-                <div
-                    className={[
-                        "grid",
-                        "grid-flow-col",
-                        "grid-rows-2",
-                        "gap-3",
-                        "auto-cols-[minmax(140px,1fr)]",
-                        "items-stretch"
-                    ].join(" ")}
-                >
-                    {items.map((label, idx) => {
-                        const Icon = icons[idx] ?? icons[icons.length - 1];
-
-                        return (
-                            <div
-                                key={idx}
-                                title={label}
-                                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 p-3 min-h-[64px] flex items-center gap-3"
-                            >
-                                <Icon className="text-lg opacity-90 shrink-0" />
-                                <div className="text-sm font-medium opacity-90 truncate">{label}</div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+            <SectionCard title={t(`${baseKey}.entrepreneurship.stagesTitle`)}>
+                <StagesTimeline stages={stages} />
+            </SectionCard>
         </div>
     );
 }

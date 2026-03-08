@@ -39,8 +39,11 @@ export default function Navbar() {
             { to: "/home", label: t("nav.home") },
             { to: "/home/about", label: t("nav.about") },
             { to: "/home/product", label: t("nav.product") },
-            { to: "/home/entrepreneurship", label: t("nav.entrepreneurship") },
             { to: "/home/workspace", label: t("nav.workspace") },
+            { to: "/home/podcast", label: t("nav.podcast") },
+            { to: "/home/reports", label: t("nav.reports") },
+            { to: "/home/certificates", label: t("nav.certificates") },
+            { to: "/home/blog", label: t("nav.blog") },
             { to: "/home/contact", label: t("nav.contact") },
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps

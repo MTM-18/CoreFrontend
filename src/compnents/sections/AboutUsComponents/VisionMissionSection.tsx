@@ -111,9 +111,7 @@ export default function AboutHeroVisionMission() {
                         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
                             {/* Left: About */}
                             <div className="space-y-4">
-                                <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-core-textLight text-start">
-                                    {t("aboutPage.hero.kicker")}
-                                </p>
+
 
                                 <h1 className="text-2xl md:text-4xl font-semibold text-core-textDark dark:text-core-textLight text-start">
                                     {t("aboutPage.hero.title")}

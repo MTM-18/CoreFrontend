@@ -1,128 +1,87 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-
-type Metric = {
-    key: string;
-    value: number;
-    suffixKey?: string; // optional suffix like "مليون دولار"
-};
-
-function formatNumber(n: number, locale: string) {
-    return new Intl.NumberFormat(locale).format(n);
-}
-
-function useCountUpOnView(target: number, inView: boolean, durationMs = 1200) {
-    const [val, setVal] = useState(0);
-    const started = useRef(false);
-
-    useEffect(() => {
-        if (!inView || started.current) return;
-        started.current = true;
-
-        const start = performance.now();
-        const from = 0;
-        const to = target;
-
-        const tick = (now: number) => {
-            const t = Math.min(1, (now - start) / durationMs);
-            // easeOutCubic
-            const eased = 1 - Math.pow(1 - t, 3);
-            const next = Math.round(from + (to - from) * eased);
-            setVal(next);
-            if (t < 1) requestAnimationFrame(tick);
-        };
-
-        requestAnimationFrame(tick);
-    }, [inView, target, durationMs]);
-
-    return val;
-}
+import {
+    FaBriefcase,
+    FaBuilding,
+    FaGraduationCap,
+    FaHandshake,
+    FaLightbulb,
+    FaMoneyBillWave,
+    FaUsers,
+    FaUserTie,
+} from "react-icons/fa";
 
 export default function AchievementsSection() {
     const { t, i18n } = useTranslation();
-    const lang = i18n.language?.startsWith("ar") ? "ar" : "en";
-    const locale = lang === "ar" ? "ar" : "en";
+    const isRTL = i18n.language.startsWith("ar");
 
-    const rootRef = useRef<HTMLElement | null>(null);
-    const [inView, setInView] = useState(false);
 
-    useEffect(() => {
-        const el = rootRef.current;
-        if (!el) return;
 
-        const obs = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) setInView(true);
-            },
-            { threshold: 0.25 }
-        );
 
-        obs.observe(el);
-        return () => obs.disconnect();
-    }, []);
 
-    const METRICS: Metric[] = useMemo(
+    const metrics = useMemo(
         () => [
-            { key: "beneficiaries", value: 5000 },
-            { key: "programs", value: 27 },
-            { key: "donors", value: 10 },
-            { key: "partners", value: 60 },
-            { key: "experts", value: 100 },
-            { key: "graduates", value: 600 },
-            { key: "startups", value: 67 },
-            { key: "investments", value: 5, suffixKey: "millionUsd" }, // 5 مليون دولار
+            { key: "beneficiaries", value: isRTL ? "+5,000" : "5,000+", icon: FaUsers },
+            { key: "programs", value: "27", icon: FaBriefcase },
+            { key: "donors", value: "10", icon: FaBuilding },
+            { key: "partners", value: "60", icon: FaHandshake },
+            { key: "experts", value: isRTL ? "+100" : "100+", icon: FaUserTie },
+            { key: "graduates", value: isRTL ? "+600" : "600+", icon: FaGraduationCap },
+            { key: "startups", value: "67", icon: FaLightbulb },
+            {
+                key: "investments",
+                value: isRTL ? "5 مليون دولار" : "$5M",
+                icon: FaMoneyBillWave,
+            },
         ],
-        []
+        [isRTL]
     );
 
     return (
-        <section ref={rootRef} className="py-5 md:py-10" dir={lang === "ar" ? "rtl" : "ltr"}>
-            <div className="layout-shell  mx-auto">
-                <div className="card-surface p-6 md:p-10">
-                    <h2 className="text-2xl md:text-3xl font-semibold text-core-brand dark:text-core-textAccent">
-                        {t("homePage.achievements.title")}
-                    </h2>
+        <section className="py-4 md:py-8" dir={isRTL ? "rtl" : "ltr"}>
+            <div className="layout-shell mx-auto">
+                <div className=" rounded-[28px] p-4 md:p-6">
+                    <div className={`mb-5 ${isRTL ? "text-right" : "text-left"}`}>
+                        <h2 className="text-xl font-semibold text-core-brand dark:text-core-textAccent md:text-3xl">
+                            {t("homePage.achievements.title")}
+                        </h2>
 
-                    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        {METRICS.map((m) => (
-                            <MetricCard
-                                key={m.key}
-                                title={t(`homePage.achievements.items.${m.key}`)}
-                                value={m.value}
-                                suffix={m.suffixKey ? t(`homePage.achievements.suffix.${m.suffixKey}`) : ""}
-                                inView={inView}
-                                locale={locale}
-                            />
-                        ))}
+
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">                        {metrics.map((metric) => {
+                            const Icon = metric.icon;
+
+                            return (
+                                <article
+                                    key={metric.key}
+                                    className="rounded-2xl border border-black/6 bg-white p-3 shadow-sm transition-transform duration-200 hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/5"
+                                >
+                                    <div
+                                        className={`flex items-center gap-3 ${
+                                            isRTL ? "flex-row-reverse text-right" : "text-left"
+                                        }`}
+                                    >
+                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-core-brand/10 text-core-brand dark:bg-core-textAccent/12 dark:text-core-textAccent">
+                                            <Icon className="text-lg" />
+                                        </div>
+
+                                        <div className="min-w-0 flex-1">
+                                            <div className="text-2xl font-bold leading-none text-core-brand dark:text-core-textAccent">
+                                                {metric.value}
+                                            </div>
+
+                                            <p className="mt-1 truncate text-xs text-core-textDark dark:text-core-textLight md:text-base">
+                                                {t(`homePage.achievements.items.${metric.key}`)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
         </section>
-    );
-}
-
-function MetricCard({
-    title,
-    value,
-    suffix,
-    inView,
-    locale,
-}: {
-    title: string;
-    value: number;
-    suffix?: string;
-    inView: boolean;
-    locale: string;
-}) {
-    const current = useCountUpOnView(value, inView, 1200);
-
-    return (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <div className="text-2xl md:text-3xl font-semibold text-core-textDark dark:text-core-textLight">
-                {formatNumber(current, locale)}
-                {suffix ? <span className="text-sm md:text-base font-medium text-core-textMuted ms-2">{suffix}</span> : null}
-            </div>
-            <div className="mt-2 text-sm text-core-textMuted leading-snug">{title}</div>
-        </div>
     );
 }
