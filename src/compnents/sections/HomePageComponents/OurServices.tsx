@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 
 // images
-import ProgramImg from "../../../assets/display/1.webp";
-import CoreProImg from "../../../assets/display/2.webp";
-import WorkspaceImg from "../../../assets/display/3.webp";
-import ConsultingImg from "../../../assets/display/4.webp"; // ✅ add your real image
+import ProgramImg from "../../../assets/display/entrepeneurship.png";
+import CoreProImg from "../../../assets/display/corepro.png";
+import WorkspaceImg from "../../../assets/display/workspace.png";
+import ConsultingImg from "../../../assets/display/consulting.png"; // ✅ add your real image
 
 type ServiceCardConfig = {
     id: string;

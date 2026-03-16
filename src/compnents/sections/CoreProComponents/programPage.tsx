@@ -103,11 +103,11 @@ function StatsGrid({ stats }: { stats: Stat[] }) {
 
 function LogoGrid({ logos }: { logos: string[] }) {
     return (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-4 xl:grid-cols-5">
             {logos.map((src, index) => (
                 <div
                     key={`${src}-${index}`}
-                    className="flex aspect-square items-center justify-center rounded-2xl border border-black/8 bg-white p-4 shadow-sm dark:border-white/10"
+                    className="flex h-32 w-32 shrink-0 snap-start items-center justify-center rounded-2xl border border-black/8 bg-white p-4 shadow-sm dark:border-white/10 sm:h-auto sm:w-auto sm:aspect-square"
                 >
                     <img
                         src={src}

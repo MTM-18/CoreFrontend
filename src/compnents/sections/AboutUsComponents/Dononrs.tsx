@@ -1,11 +1,10 @@
 import { useTranslation } from "react-i18next";
 
-import namaaCharityLogo from "../../../assets/donorsLogos/namaaCharityLogo.webp";
-import abdullahNoriCharityLogo from "../../../assets/donorsLogos/abdullahNoriCharityLogo.webp";
-
+import namaaCharityLogo from "../../../assets/donorsLogos/namaaCharityLogo.png";
+import abdullahNoriCharityLogo from "../../../assets/donorsLogos/abdullahNoriCharityLogo.png";
 import dhiaAcademyLogo from "../../../assets/donorsLogos/dhiaAcademy.png";
-import islamicDevelopmentBankLogo from "../../../assets/donorsLogos/islamicDevelopmentBank.jpg";
-import qatarAlkhairiahLogo from "../../../assets/donorsLogos/qatarAlkhairiah.svg";
+import islamicDevelopmentBankLogo from "../../../assets/donorsLogos/islamicDevelopmentBank.png";
+import qatarAlkhairiahLogo from "../../../assets/donorsLogos/qatarAlkhairiah.png";
 import sparkLogo from "../../../assets/donorsLogos/Spark.png";
 import unhcrLogo from "../../../assets/donorsLogos/UNHCR.png";
 
@@ -24,105 +23,104 @@ const DONORS: Donor[] = [
     { id: "unhcr", image: unhcrLogo },
 ];
 
+const DONORS_LOOP = [...DONORS, ...DONORS];
+
 export default function DonorsSection() {
     const { t, i18n } = useTranslation();
     const isRtl = i18n.language?.startsWith("ar");
 
-    // ✅ خليها نسختين فقط حتى -50% يكون seamless صح
-    const loop = [...DONORS, ...DONORS];
-
     return (
-        <section>
+        <section className="py-12 overflow-x-hidden" dir={isRtl ? "rtl" : "ltr"}>
             <style>{`
-        .donors-marquee { 
-          overflow: hidden; 
-          width: 100vw; 
-          margin-left: calc(50% - 50vw);
-          direction: ltr; /* ✅ مهم: لا تخلي RTL يأثر على flex */
-        }
+                .donors-marquee {
+                    overflow: hidden;
+                    direction: ltr;
+                }
 
-        .donors-track {
-          display: flex;
-          width: max-content;
-          animation: donors-scroll-ltr 26s linear infinite;
-          will-change: transform;
-        }
+                .donors-track {
+                    display: flex;
+                    width: max-content;
+                    will-change: transform;
+                    animation: donors-scroll 28s linear infinite;
+                }
 
-        .donors-marquee:hover .donors-track { animation-play-state: paused; }
+                .donors-marquee:hover .donors-track {
+                    animation-play-state: paused;
+                }
 
-        @keyframes donors-scroll-ltr {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
+                @keyframes donors-scroll {
+                    from {
+                        transform: translate3d(0, 0, 0);
+                    }
+                    to {
+                        transform: translate3d(-50%, 0, 0);
+                    }
+                }
 
-        /* ✅ بالعربي نعكس الحركة بدون ما نعكس الـ layout */
-        .donors-marquee[data-rtl="true"] .donors-track {
-          animation-name: donors-scroll-rtl;
-        }
+                @media (prefers-reduced-motion: reduce) {
+                    .donors-track {
+                        animation: none;
+                        transform: none;
+                    }
+                }
+            `}</style>
 
-        @keyframes donors-scroll-rtl {
-          from { transform: translateX(-50%); }
-          to   { transform: translateX(0); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .donors-track { animation: none; transform: none; }
-        }
-      `}</style>
-
-            {/* Heading */}
-            <div className="layout-shell  mx-auto space-y-10">
+            <div className="layout-shell mx-auto space-y-8">
                 <div className="space-y-2">
-                    <h2 className="text-2xl md:text-3xl font-semibold text-core-brand dark:text-core-textAccent">
+                    <h2 className="text-2xl font-semibold text-core-brand dark:text-core-textAccent md:text-3xl">
                         {t("aboutPage.donors.title")}
                     </h2>
 
-                    <p className="text-sm md:text-base text-core-textDark dark:text-core-textLight max-w-xl">
+                    <p className="max-w-xl text-sm text-core-textDark dark:text-core-textLight md:text-base">
                         {t("aboutPage.donors.subtitle")}
                     </p>
                 </div>
             </div>
 
-            {/* Marquee FULL WIDTH */}
-            <div
-                className="
-          donors-marquee mt-6 px-6
-          [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]
-          [-webkit-mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]
-        "
-                data-rtl={isRtl ? "true" : "false"}
-            >
-                <div className="donors-track gap-12">
-                    {loop.map((donor, idx) => (
-                        <div key={`${donor.id}-${idx}`} className="flex flex-col items-center">
+            <div className="relative left-1/2 mt-8 w-screen -translate-x-1/2 overflow-hidden">
+                <div
+                    className="
+                        donors-marquee px-4 sm:px-6 lg:px-8
+                        [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]
+                        [-webkit-mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]
+                    "
+                >
+                    <div className="donors-track gap-4 md:gap-5">
+                        {DONORS_LOOP.map((donor, idx) => (
                             <div
+                                key={`${donor.id}-${idx}`}
                                 className="
-                  w-28 h-28 md:w-32 md:h-32
-                  rounded-full
-                  bg-white/100 dark:bg-white/100
-                  border border-black/10 dark:border-white/15
-                  shadow-sm transition hover:shadow-md hover:-translate-y-0.5
-                  flex items-center justify-center
-                  p-5
-                "
+                                    w-[180px] shrink-0 rounded-3xl border border-white/10
+                                    bg-white/5 p-4 text-center backdrop-blur-sm
+                                    transition hover:-translate-y-1 hover:bg-white/10
+                                    sm:w-[200px] lg:w-[220px]
+                                "
                             >
-                                <img
-                                    src={donor.image}
-                                    alt={t(`aboutPage.donors.list.${donor.id}.name`)}
-                                    className="max-h-full max-w-full object-contain"
-                                    loading="lazy"
-                                    draggable={false}
-                                />
-                            </div>
+                                <div
+                                    className="
+                                        flex h-32 w-full items-center justify-center rounded-2xl
+                                        bg-white px-2 py-2 shadow-sm md:h-28
+                                    "
+                                >
+                                    <img
+                                        src={donor.image}
+                                        alt={t(`aboutPage.donors.list.${donor.id}.name`)}
+                                        className="h-full w-full object-contain"
+                                        loading="lazy"
+                                        decoding="async"
+                                        draggable={false}
+                                    />
+                                </div>
 
-                            <p
-                                dir={isRtl ? "rtl" : "ltr"}
-                                className="mt-3 text-sm text-core-textblack dark:text-core-textLight text-center whitespace-nowrap"
-                            >
-                                {t(`aboutPage.donors.list.${donor.id}.name`)}
-                            </p>
-                        </div>
-                    ))}
+                                <p
+                                    dir={isRtl ? "rtl" : "ltr"}
+                                    className="mt-3 text-sm leading-snug text-core-textLight"
+                                >
+                                    {t(`aboutPage.donors.list.${donor.id}.name`)}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

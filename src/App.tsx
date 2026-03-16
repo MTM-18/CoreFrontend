@@ -1,18 +1,25 @@
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-import HomePage from "./pages/HomePage";
-import ProductPage from "./pages/ProductPage";
-import WorkspacePage from "./pages/WorkspacePage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
+const HomePage = lazy(() => import("./pages/HomePage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const WorkspacePage = lazy(() => import("./pages/WorkspacePage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const ComingSoonPage = lazy(() => import("./pages/ComingSoonPage"));
+const StylizedGlobe = lazy(() => import("./pages/StylizedGlobe"));
+
 import Navbar from "./compnents/layout/Navbar";
 import Footer from "./compnents/layout/Footer";
 import BackgroundOrbits from "./compnents/layout/BackgroundOrbits";
-import ComingSoonPage from "./pages/ComingSoonPage";
 
-// put the REAL path of your globe component here
-const StylizedGlobe = lazy(() => import("./pages/StylizedGlobe"));
+function RouteLoader() {
+    return (
+        <div className="min-h-[40vh] flex items-center justify-center">
+            Loading...
+        </div>
+    );
+}
 
 function SiteLayout() {
     return (
@@ -20,7 +27,9 @@ function SiteLayout() {
             <BackgroundOrbits />
             <Navbar />
             <main className="flex-1 pt-16">
-                <Outlet />
+                <Suspense fallback={<RouteLoader />}>
+                    <Outlet />
+                </Suspense>
             </main>
             <Footer />
         </div>
@@ -33,13 +42,7 @@ export default function App() {
             <Route
                 path="/"
                 element={
-                    <Suspense
-                        fallback={
-                            <div className="min-h-screen flex items-center justify-center">
-                                Loading...
-                            </div>
-                        }
-                    >
+                    <Suspense fallback={<RouteLoader />}>
                         <StylizedGlobe />
                     </Suspense>
                 }
@@ -58,7 +61,6 @@ export default function App() {
             </Route>
 
             <Route path="/product" element={<Navigate to="/home/product" replace />} />
-            <Route path="/entrepreneurship" element={<Navigate to="/home/entrepreneurship" replace />} />
             <Route path="/workspace" element={<Navigate to="/home/workspace" replace />} />
             <Route path="/about" element={<Navigate to="/home/about" replace />} />
             <Route path="/contact" element={<Navigate to="/home/contact" replace />} />
@@ -67,7 +69,7 @@ export default function App() {
             <Route path="/certificates" element={<Navigate to="/home/certificates" replace />} />
             <Route path="/blog" element={<Navigate to="/home/blog" replace />} />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
     );
 }

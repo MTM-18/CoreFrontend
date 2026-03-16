@@ -5,7 +5,14 @@
         "workspace": "Workspace",
         "entrepreneurship": "Entrepreneurship",
         "about": "About Us",
-        "contact": "Contact"
+        "contact": "Contact",
+        "blog": "Blog",
+        "podcast": "Podcast",
+        "certificates": "Certificates",
+        "reports": "Reports"
+    },
+    "comingSoon": {
+        "description": "Coming Soon"
     },
     "hero": {
         "eyebrow": "CORE ISTANBUL",
@@ -632,23 +639,23 @@
             "stagesTitle": "Incubation program stages",
             "stages": [
                 {
-                    "title": "1) Apply",
+                    "title": "Apply",
                     "desc": "Attract incubatable projects via an online form to understand the idea and founders, then select 50 projects to move to the next stage."
                 },
                 {
-                    "title": "2) Bootcamp",
+                    "title": "Bootcamp",
                     "desc": "A 2-day intensive bootcamp to finalize pitch decks and present to the jury, filtering to 20 projects that enter incubation."
                 },
                 {
-                    "title": "3) Incubation",
+                    "title": "Incubation",
                     "desc": "A full 6-month incubation program with intensive workshops to build business models and prepare for market entry."
                 },
                 {
-                    "title": "4) Final Demo Day",
+                    "title": "Final Demo Day",
                     "desc": "Projects deliver final pitches to the jury to announce investment-ready winners."
                 },
                 {
-                    "title": "5) Post-incubation",
+                    "title": "Post-incubation",
                     "desc": "Core connects successful graduates with its investor network and continues advisory and mentoring support."
                 }
             ]

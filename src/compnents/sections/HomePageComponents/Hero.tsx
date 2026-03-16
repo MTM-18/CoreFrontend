@@ -48,8 +48,7 @@ export default function Hero() {
                     <div className="min-h-[180px] sm:min-h-[200px] md:min-h-[220px] ">
                         <h1
                             key={activeIndex}
-                            className="max-w-3xl text-3xl font-semibold leading-tight text-core-textDark dark:text-core-textLight sm:text-4xl md:text-5xl"
-                        >
+                            className="max-w-3xl text-3xl font-semibold leading-[1.18] text-core-textDark dark:text-core-textLight sm:text-4xl sm:leading-[1.4] md:text-5xl md:leading-[1.4]"                        >
                             {active.title}
                         </h1>
                     </div>
