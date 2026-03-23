@@ -49,9 +49,9 @@ type Stage = { title: string; desc: string };
 
 function SectionCard({ title, children }: { title?: string; children: ReactNode }) {
     return (
-        <section className="rounded-3xl border border-black/8 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/5 md:p-6">
+        <section className="rounded-3xl border border-black/8 bg-white/80 px-5 py-4 shadow-sm dark:border-white/10 dark:bg-white/5 md:px-6 md:py-5">
             {title ? (
-                <h3 className="mb-4 text-lg font-semibold text-core-textDark dark:text-core-textLight">{title}</h3>
+                <h3 className="mb-3 text-lg font-semibold text-core-textDark dark:text-core-textLight">{title}</h3>
             ) : null}
             {children}
         </section>
@@ -72,7 +72,7 @@ function SimpleGrid({
                 return (
                     <div
                         key={`${label}-${index}`}
-                        className="flex items-center gap-3 rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                        className="flex items-center gap-3 rounded-2xl  p-4 "
                     >
                         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-core-brand/10 text-core-brand dark:bg-core-textAccent/12 dark:text-core-textAccent">
                             <Icon className="text-base" />
@@ -87,14 +87,18 @@ function SimpleGrid({
 
 function StatsGrid({ stats }: { stats: Stat[] }) {
     return (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
             {stats.map((stat, index) => (
                 <div
                     key={`${stat.label}-${index}`}
-                    className="rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
+                    className="rounded-2xl border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5"
                 >
-                    <div className="text-2xl font-semibold text-core-textDark dark:text-core-textLight">{stat.value}</div>
-                    <div className="mt-2 text-sm leading-6 text-core-textMuted dark:text-core-textMutedDark">{stat.label}</div>
+                    <div className="text-2xl font-semibold text-core-textDark dark:text-core-textLight">
+                        {stat.value}
+                    </div>
+                    <div className="mt-2 text-sm leading-6 text-core-textDark dark:text-core-textLight">
+                        {stat.label}
+                    </div>
                 </div>
             ))}
         </div>
@@ -122,17 +126,48 @@ function LogoGrid({ logos }: { logos: string[] }) {
     );
 }
 
+function SectorsGrid({
+                         items,
+                         icons,
+                     }: {
+    items: string[];
+    icons: Array<ComponentType<{ className?: string }>>;
+}) {
+    return (
+        <div className="flex gap-4 overflow-x-auto px-1 pb-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-y-6 md:gap-x-8 md:overflow-visible md:justify-items-center xl:grid-cols-3">
+            {items.map((label, index) => {
+                const Icon = icons[index] ?? icons[icons.length - 1];
+
+                return (
+                    <div
+                        key={`${label}-${index}`}
+                        className="flex w-[calc(50%-0.5rem)] min-w-[calc(50%-0.5rem)] shrink-0 snap-start flex-col items-center justify-center md:w-auto md:min-w-0"
+                    >
+                        <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-3xl bg-core-brand/10 text-core-brand dark:bg-core-textAccent/12 dark:text-core-textAccent">
+                            <Icon className="h-8 w-8" />
+                        </div>
+
+                        <span className="text-center text-sm font-semibold leading-5 text-core-textDark dark:text-core-textLight">
+                            {label}
+                        </span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 function StagesTimeline({ stages }: { stages: Stage[] }) {
     return (
         <div className="space-y-4">
             {stages.map((stage, index) => (
-                <div key={`${stage.title}-${index}`} className="flex gap-4 rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5">
+                <div key={`${stage.title}-${index}`} className="flex gap-4 rounded-2xl  border-black/8 p-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-core-brand text-sm font-semibold text-white dark:bg-core-textAccent dark:text-black">
                         {index + 1}
                     </div>
                     <div>
                         <h4 className="text-sm font-semibold text-core-textDark dark:text-core-textLight md:text-base">{stage.title}</h4>
-                        <p className="mt-2 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">{stage.desc}</p>
+                        <p className="mt-2 text-sm leading-7 text-core-textDark dark:text-core-textLight">{stage.desc}</p>
                     </div>
                 </div>
             ))}
@@ -142,11 +177,18 @@ function StagesTimeline({ stages }: { stages: Stage[] }) {
 
 function QuotesGrid({ quotes }: { quotes: Quote[] }) {
     return (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible">
             {quotes.map((quote, index) => (
-                <div key={`${quote.name}-${index}`} className="rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5">
-                    <p className="text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">“{quote.text}”</p>
-                    <div className="mt-3 text-sm font-semibold text-core-textDark dark:text-core-textLight">{quote.name}</div>
+                <div
+                    key={`${quote.name}-${index}`}
+                    className="w-[88%] min-w-[88%] shrink-0 snap-start rounded-2xl border border-black/8 bg-white/70 p-4 dark:border-white/10 dark:bg-white/5 md:w-auto md:min-w-0 md:shrink"
+                >
+                    <p className="text-sm leading-7 text-core-textDark dark:text-core-textLight">
+                        “{quote.text}”
+                    </p>
+                    <div className="mt-3 text-sm font-semibold text-core-textDark dark:text-core-textLight">
+                        {quote.name}
+                    </div>
                 </div>
             ))}
         </div>
@@ -156,7 +198,7 @@ function QuotesGrid({ quotes }: { quotes: Quote[] }) {
 function ComingSoon({ title, body }: { title: string; body: string }) {
     return (
         <SectionCard title={title}>
-            <p className="text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">{body}</p>
+            <p className="text-sm leading-7 text-core-textDark dark:text-core-textLight">{body}</p>
         </SectionCard>
     );
 }
@@ -201,7 +243,7 @@ export default function ProgramsPage() {
                 <h1 className="text-3xl font-semibold tracking-tight text-core-textDark dark:text-core-textLight md:text-4xl">
                     {t(`${baseKey}.title`)}
                 </h1>
-                <p className="max-w-3xl text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark md:text-base">
+                <p className="max-w-3xl text-sm leading-7 text-core-textDark dark:text-core-textLight md:text-base">
                     {t(`${baseKey}.subtitle`)}
                 </p>
             </div>
@@ -275,14 +317,14 @@ function Vocational({
                 <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight">
                     {t(`${baseKey}.vocational.title`)}
                 </h2>
-                <p className="mt-3 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">
+                <p className="mt-3 text-sm leading-7 text-core-textDark dark:text-core-textLight">
                     <span className="font-semibold text-core-textDark dark:text-core-textLight">{t(`${baseKey}.vocational.aboutTitle`)}: </span>
                     {t(`${baseKey}.vocational.about`)}
                 </p>
             </SectionCard>
 
             <SectionCard title={t(`${baseKey}.vocational.sectorsTitle`)}>
-                <SimpleGrid
+                <SectorsGrid
                     items={sectors}
                     icons={[FaBullhorn, FaShoppingCart, FaPenNib, FaCamera, FaCode, FaCalculator, FaVideo, FaTasks, FaCouch, FaFeatherAlt]}
                 />
@@ -323,7 +365,7 @@ function Entrepreneurship({
                 <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight">
                     {t(`${baseKey}.entrepreneurship.title`)}
                 </h2>
-                <p className="mt-3 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark">
+                <p className="mt-3 text-sm leading-7 text-core-textDark dark:text-core-textLight">
                     <span className="font-semibold text-core-textDark dark:text-core-textLight">{t(`${baseKey}.entrepreneurship.aboutTitle`)}: </span>
                     {t(`${baseKey}.entrepreneurship.about`)}
                 </p>
@@ -338,7 +380,7 @@ function Entrepreneurship({
             </SectionCard>
 
             <SectionCard title={t(`${baseKey}.entrepreneurship.sectorsTitle`)}>
-                <SimpleGrid items={sectors} icons={[FaTruck, FaIndustry, FaShoppingCart, FaBrain, FaLaptopCode, FaHeartbeat]} />
+                <SectorsGrid items={sectors} icons={[FaTruck, FaIndustry, FaShoppingCart, FaBrain, FaLaptopCode, FaHeartbeat]} />
             </SectionCard>
 
             <SectionCard title={t(`${baseKey}.entrepreneurship.cohortsTitle`)}>

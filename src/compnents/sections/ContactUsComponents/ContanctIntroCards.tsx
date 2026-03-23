@@ -16,7 +16,7 @@ export default function ContactIntroCards() {
                 <h1 className="text-2xl md:text-3xl font-semibold mb-3">
                     {t("contactPage.intro.title")}
                 </h1>
-                <p className="text-base text-core-textMuted dark:text-core-textMutedDark">
+                <p className="text-base text-core-textDark dark:text-core-textLight">
                     {t("contactPage.intro.subtitle")}
                 </p>
             </div>
@@ -39,7 +39,7 @@ group
                                 <h3 className="text-lg font-semibold mb-1">
                                     {t(`contactPage.cards.${key}.label`)}
                                 </h3>
-                                <p className="text-sm text-core-textMuted dark:text-core-textMutedDark">
+                                <p className="text-sm text-core-textDark dark:text-core-textLight">
                                     {t(`contactPage.cards.${key}.primary`)}
                                 </p>
                                 {t(`contactPage.cards.${key}.secondary`) && (

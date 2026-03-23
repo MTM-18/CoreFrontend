@@ -69,7 +69,7 @@ function InfoCard({
                     </div>
 
                     <div className="min-w-0">
-                        <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-core-textMuted text-start">
+                        <p className="text-[15px] font-semibold tracking-[0.22em] uppercase text-core-textDark dark:text-core-textLight">
                             {label}
                         </p>
                         <h3 className="text-sm md:text-base font-semibold text-core-textDark dark:text-core-textLight text-start">
@@ -127,14 +127,14 @@ export default function AboutHeroVisionMission() {
                                 <InfoCard
                                     icon={<EyeIcon />}
                                     label={t("aboutPage.vision.title")}
-                                    title={t("aboutPage.vision.title")}
+                                    title={t("")}
                                     body={t("aboutPage.vision.body")}
                                 />
 
                                 <InfoCard
                                     icon={<TargetIcon />}
                                     label={t("aboutPage.mission.title")}
-                                    title={t("aboutPage.mission.title")}
+                                    title={t("")}
                                     body={t("aboutPage.mission.body")}
                                 />
                             </div>

@@ -574,14 +574,67 @@
             "testimonialsTitle": "They said",
             "testimonials": [
                 {
-                    "name": "Noor Bas Oghlo",
-                    "text": "What I learned at Core, I didn’t learn in 4 years at university."
+                    "name": "Awwab Faisal",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "The program was comprehensive. We started with strategic planning, then learned how to choose platforms and integrate payment gateways, all the way to marketing and promotion. The workshops were also highly valuable, as exchanging experiences with other participants enriched the training and helped us think practically about business challenges."
                 },
                 {
-                    "name": "Hussein Al-Hussein",
-                    "text": "What we studied at Core developed our skills... (etc.)"
+                    "name": "Sama Issa Oghlo",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "I had always dreamed of starting my own project, and this program did more than support that ambition. It gave me the tools and structure to turn it into reality. This fully funded opportunity gave me confidence, knowledge, and a clear path toward achieving my goals."
+                },
+                {
+                    "name": "Shorouq Osama",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "Before joining the course, I felt lost, as though there was a gap I could not bridge. But by the end of the training, I felt that I had found the foundation I needed to begin taking real steps toward my dream."
+                },
+                {
+                    "name": "Abdulrahman Zain Al-Din",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "Unlike scattered online content, this training offered a complete learning journey. Everything was well organized, and our trainers were experts who did not just transfer knowledge, but shared real-life experience with us. What made the biggest difference was the team around me. Every time I faced a challenge, I found people who supported and encouraged me to grow."
+                },
+                {
+                    "name": "Turfan Biko",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "Cybersecurity is extremely important for the Arab world. We are still in a stage of digital development, and we need to protect ourselves. Thank you so much for this golden opportunity and for supporting young people in technology and many other fields."
+                },
+                {
+                    "name": "Hadeel Taqi",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "This program gave me the right tools, environment, and trainers. It was a turning point that gave me confidence and clarity about my future."
+                },
+                {
+                    "name": "Anas Al-Khudari",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "This program was not just training. It was an opportunity to think more broadly and take confident steps toward the future. I gained real practical tools and built a network of relationships that will support me in my professional journey."
+                },
+                {
+                    "name": "Batoul Mousa",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "Core was like my second home. I spent more time there than anywhere else, and it became part of my life. I had wanted to learn this field for years, but I never had the chance. Core Istanbul gave me that opportunity through this fully funded program, and it became a real turning point in my life. Thank you."
+                },
+                {
+                    "name": "Mohammad Zaher Abdelaziz",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "I was one of those waiting for a real opportunity, and this was my opportunity. Thank you for believing in young people who are capable of giving, creating, and making a difference."
+                },
+                {
+                    "name": "Laila Qudsi",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "The PMP program at Core Istanbul was a distinctive experience, unlike any previous training I had attended. It combined practical knowledge with real-world experience and strengthened my ability to manage projects more effectively, especially in the humanitarian sector where sustainability is essential."
+                },
+                {
+                    "name": "Fatima Al Mulla",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "The PMP program at Core Istanbul stood out for its highly interactive environment and experienced trainers, making it a practical training experience that meets the needs of young people from diverse academic backgrounds."
+                },
+                {
+                    "name": "Zahera Shalab Al Sham",
+                    "role": "Beneficiary of Core Istanbul programs",
+                    "text": "The PMP program delivered by Core Istanbul was not just a training course, but an experience that changed my academic and professional path through a supportive environment, professional trainers, and well-structured content that strengthened my confidence in building a successful career."
                 }
             ]
+
         },
         "entrepreneurship": {
             "title": "Entrepreneurship Programs",

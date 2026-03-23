@@ -34,7 +34,7 @@ export default function PhotoLibrarySection() {
                     <h2 className="text-2xl font-semibold text-core-brand dark:text-core-textAccent md:text-3xl">
                         {t("aboutPage.gallery.title")}
                     </h2>
-                    <p className="max-w-2xl text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark md:text-base">
+                    <p className="max-w-2xl text-sm leading-7 text-core-textDark dark:text-core-textLight md:text-base">
                         {t("aboutPage.gallery.subtitle")}
                     </p>
                 </div>
@@ -52,7 +52,7 @@ export default function PhotoLibrarySection() {
                                 loading="lazy"
                                 decoding="async"
                             />
-                            <figcaption className="px-4 py-3 text-sm text-core-textMuted dark:text-core-textMutedDark">
+                            <figcaption className="px-4 py-3 text-sm text-core-textDark dark:text-core-textLight">
                                 {t(`aboutPage.gallery.items.${item.id}.label`)}
                             </figcaption>
                         </figure>

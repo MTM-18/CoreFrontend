@@ -21,7 +21,7 @@ export default function ComingSoonPage({ titleKey }: ComingSoonPageProps) {
                 <h1 className="text-2xl font-semibold text-core-textDark dark:text-core-textLight md:text-3xl">
                     {t(titleKey)}
                 </h1>
-                <p className="mt-4 text-sm leading-7 text-core-textMuted dark:text-core-textMutedDark md:text-base">
+                <p className="mt-4 text-sm leading-7 text-core-textDark dark:text-core-textLight md:text-base">
                     {t("comingSoon.description")}
                 </p>
             </section>

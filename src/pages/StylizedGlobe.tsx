@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 import BackgroundOrbits from "../compnents/layout/BackgroundOrbits";
 import coreLogo from "../assets/logo/fullWhiteLogo.svg";
 
-const WORLD_TOPO = "https://unpkg.com/world-atlas@2/countries-110m.json";
+const WORLD_TOPO = "/data/countries-110m.json";
 const BRANCH_COUNTRIES = new Set(["Turkey", "Syria", "Iraq"]);
 
 type Branch = {
@@ -220,35 +220,36 @@ export default function StylizedGlobe() {
             wrap.style.pointerEvents = "none";
             wrap.style.transform = "translate(-50%, -70%)";
 
-            const label = document.createElement("div");
-            label.textContent = d.label;
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = d.label;
+            button.setAttribute("aria-label", d.label);
 
-            label.className =
+            button.className =
                 "pointer-events-auto select-none whitespace-nowrap rounded-full " +
                 "px-3 py-2 text-[13px] font-extrabold tracking-wide " +
                 "text-white bg-black/60 backdrop-blur-md border border-white/15 " +
-                "transition-transform duration-150 ease-out";
+                "transition-transform duration-150 ease-out cursor-pointer";
 
-            label.style.boxShadow = `0 0 18px ${rgbaFromCssColor(brandCss.orange, 0.55)}`;
+            button.style.boxShadow = `0 0 18px ${rgbaFromCssColor(brandCss.orange, 0.55)}`;
 
-            label.onmouseenter = () => {
+            button.onmouseenter = () => {
                 setHoveredBranchCountry(d.countryName);
-                label.style.transform = "translateY(-2px) scale(1.03)";
-                label.style.background = "rgba(20, 10, 40, 0.78)";
-                label.style.boxShadow = `0 0 28px ${rgbaFromCssColor(brandCss.purple, 0.65)}`;
+                button.style.transform = "translateY(-2px) scale(1.03)";
+                button.style.background = "rgba(20, 10, 40, 0.78)";
+                button.style.boxShadow = `0 0 28px ${rgbaFromCssColor(brandCss.purple, 0.65)}`;
                 document.body.style.cursor = "pointer";
             };
 
-            label.onmouseleave = () => {
+            button.onmouseleave = () => {
                 setHoveredBranchCountry(null);
-                label.style.transform = "translateY(0px) scale(1)";
-                label.style.background = "rgba(0,0,0,0.60)";
-                label.style.boxShadow = `0 0 18px ${rgbaFromCssColor(brandCss.orange, 0.55)}`;
+                button.style.transform = "translateY(0px) scale(1)";
+                button.style.background = "rgba(0,0,0,0.60)";
+                button.style.boxShadow = `0 0 18px ${rgbaFromCssColor(brandCss.orange, 0.55)}`;
                 document.body.style.cursor = "grab";
             };
 
-            // ✅ Istanbul navigates, others show "Coming soon"
-            label.onclick = (ev: MouseEvent) => {
+            button.onclick = (ev: MouseEvent) => {
                 ev.preventDefault();
                 ev.stopPropagation();
 
@@ -260,7 +261,7 @@ export default function StylizedGlobe() {
                 setComingSoon(d);
             };
 
-            wrap.appendChild(label);
+            wrap.appendChild(button);
             return wrap;
         },
         [brandCss.orange, brandCss.purple, navigate]

@@ -173,7 +173,7 @@ export default function Navbar() {
       "
         >
             {/* ================= DESKTOP (>= 1050px) ================= */}
-            <div className="hidden min-[1050px]:block">
+            <div className="hidden min-[1424px]:block">
                 <div className="layout-shell px-10 h-16 flex items-center justify-between gap-4">
                     {/* LEFT: logo */}
                     <div className="flex items-center flex-shrink-0">
@@ -246,7 +246,7 @@ export default function Navbar() {
             </div>
 
             {/* ================= MOBILE (< 1050px) ================= */}
-            <div className="min-[1050px]:hidden layout-shell px-4 pt-2 pb-3 flex flex-col gap-2">
+            <div className="min-[1424px]:hidden layout-shell px-4 pt-2 pb-3 flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center flex-shrink-0">
                         <img
