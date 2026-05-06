@@ -57,6 +57,58 @@ function hashString(str: string) {
     return Math.abs(h);
 }
 
+function drawRoundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+}
+
+function createBranchTagSprite(branch: Branch, accentColor: string) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 144;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return new THREE.Sprite();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.shadowColor = rgbaFromCssColor(accentColor, 0.85);
+    ctx.shadowBlur = 22;
+    ctx.fillStyle = "rgba(20, 14, 20, 0.88)";
+    drawRoundRect(ctx, 18, 28, 476, 88, 40);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.20)";
+    drawRoundRect(ctx, 18, 28, 476, 88, 40);
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 36px Quicksand, Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(branch.label.trim(), 256, 72);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+
+    const sprite = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+            map: texture,
+            transparent: true,
+            depthTest: false,
+            depthWrite: false,
+        })
+    );
+    sprite.renderOrder = 999;
+    return sprite;
+}
+
 export default function StylizedGlobe() {
     const navigate = useNavigate();
 
@@ -228,59 +280,6 @@ export default function StylizedGlobe() {
             setComingSoon(branch);
         },
         [navigate]
-    );
-
-    // labels (TS-safe)
-    const htmlElement = useCallback(
-        (obj: any) => {
-            const d = obj as Branch;
-
-            const wrap = document.createElement("div");
-            wrap.style.pointerEvents = "auto";
-            wrap.style.transform = "translate(-50%, -70%)";
-            wrap.style.position = "relative";
-            wrap.style.zIndex = "25";
-
-            const button = document.createElement("button");
-            button.type = "button";
-            button.textContent = d.label;
-            button.setAttribute("aria-label", d.label);
-
-            button.className =
-                "pointer-events-auto select-none whitespace-nowrap rounded-full " +
-                "px-3 py-2 text-[13px] font-extrabold tracking-wide " +
-                "text-white bg-black/75 backdrop-blur-md border border-white/20 " +
-                "transition-transform duration-150 ease-out cursor-pointer";
-
-            button.style.boxShadow = `0 0 20px ${rgbaFromCssColor(brandCss.orange, 0.72)}`;
-
-            button.onmouseenter = () => {
-                setHoveredBranchCountry(d.countryName);
-                button.style.transform = "translateY(-2px) scale(1.03)";
-                button.style.background = "rgba(20, 10, 40, 0.78)";
-                button.style.boxShadow = `0 0 28px ${rgbaFromCssColor(brandCss.purple, 0.65)}`;
-                document.body.style.cursor = "pointer";
-            };
-
-            button.onmouseleave = () => {
-                setHoveredBranchCountry(null);
-                button.style.transform = "translateY(0px) scale(1)";
-                button.style.background = "rgba(0,0,0,0.60)";
-                button.style.boxShadow = `0 0 18px ${rgbaFromCssColor(brandCss.orange, 0.55)}`;
-                document.body.style.cursor = "grab";
-            };
-
-            button.onclick = (ev: MouseEvent) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-
-                openBranch(d);
-            };
-
-            wrap.appendChild(button);
-            return wrap;
-        },
-        [brandCss.orange, brandCss.purple, openBranch]
     );
 
     // ribbons/halo/stars (brand-based)
@@ -464,11 +463,26 @@ export default function StylizedGlobe() {
                             : "rgba(255,255,255,0.9)"
                     }
                     onPointClick={(obj: any) => openBranch(obj as Branch)}
-                    htmlElementsData={BRANCHES}
-                    htmlLat={(obj: any) => (obj as Branch).lat}
-                    htmlLng={(obj: any) => (obj as Branch).lng}
-                    htmlAltitude={0.08}
-                    htmlElement={htmlElement}
+                    customLayerData={BRANCHES}
+                    customThreeObject={(obj: object) => createBranchTagSprite(obj as Branch, brandCss.orange)}
+                    customThreeObjectUpdate={(obj: THREE.Object3D, objData: object) => {
+                        const branch = objData as Branch;
+                        const g = globeRef.current;
+                        if (!g?.getCoords) return;
+
+                        const coords = g.getCoords(branch.lat, branch.lng, 0.11);
+                        obj.position.set(coords.x, coords.y, coords.z);
+
+                        const radius = g.getGlobeRadius ? g.getGlobeRadius() : 100;
+                        const labelWidth = isCompact ? radius * 0.11 : radius * 0.13;
+                        obj.scale.set(labelWidth, labelWidth * 0.28, 1);
+                    }}
+                    customLayerLabel={(obj: any) => (obj as Branch).label}
+                    onCustomLayerClick={(obj: any) => openBranch(obj as Branch)}
+                    onCustomLayerHover={(obj: any | null) => {
+                        setHoveredBranchCountry(obj ? (obj as Branch).countryName : null);
+                        document.body.style.cursor = obj ? "pointer" : "grab";
+                    }}
                 />
             </div>
         </div>
