@@ -6,6 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./compnents/language/i18n";
 
+document.documentElement.classList.add("dark");
+localStorage.setItem("theme", "dark");
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider>

@@ -19,7 +19,6 @@ html[lang="en"] body {
 
 /* 3) Global styles */
 body {
-  @apply bg-core-lightBg text-core-textDark antialiased;
-  @apply dark:bg-core-darkBg dark:text-core-textLight;
+  @apply bg-core-darkBg text-core-textLight antialiased;
   margin: 0;
 }

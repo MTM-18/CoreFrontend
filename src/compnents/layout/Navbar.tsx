@@ -1,5 +1,4 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useTheme } from "../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
@@ -9,7 +8,6 @@ import LogoColored from "../../assets/logo/fullColorLogo.svg";
 import LogoWhite from "../../assets/logo/logoWhite.png";
 
 export default function Navbar() {
-    const { theme, toggleTheme } = useTheme();
     const { t, i18n } = useTranslation();
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,15 +22,6 @@ export default function Navbar() {
         { value: "en", label: "EN" },
         { value: "ar", label: "AR" },
     ];
-
-    const themeOptions = [
-        { value: "light", label: "☀" },
-        { value: "dark", label: "🌙" },
-    ];
-
-    const handleThemeChange = (next: string) => {
-        if (next !== theme) toggleTheme();
-    };
 
     const navItems = useMemo(
         () => [
@@ -120,8 +109,6 @@ export default function Navbar() {
         window.addEventListener("resize", onResize);
         return () => window.removeEventListener("resize", onResize);
     }, [moveCapsule]);
-
-    const isDarkTheme = theme === "dark";
 
     /* -------------------- MOBILE: dropdown animation -------------------- */
     const mobileDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -220,9 +207,7 @@ export default function Navbar() {
                                                 "relative z-10 nav-link text-sm transition-colors px-4 py-1.5",
                                                 isActive
                                                     ? "font-semibold text-black"
-                                                    : isDarkTheme
-                                                        ? "text-white/90 hover:text-white"
-                                                        : "text-white/95 hover:text-white",
+                                                    : "text-white/90 hover:text-white",
                                             ].join(" ")
                                         }
                                     >
@@ -239,8 +224,8 @@ export default function Navbar() {
                             options={langOptions}
                             value={currentLang}
                             onChange={(v) => setLang(v as "en" | "ar")}
+                            className="lang-toggle"
                         />
-                        <ToggleSwitch options={themeOptions} value={theme} onChange={handleThemeChange} />
                     </div>
                 </div>
             </div>
@@ -280,8 +265,8 @@ export default function Navbar() {
                             options={langOptions}
                             value={currentLang}
                             onChange={(v) => setLang(v as "en" | "ar")}
+                            className="lang-toggle"
                         />
-                        <ToggleSwitch options={themeOptions} value={theme} onChange={handleThemeChange} />
                     </div>
                 </div>
 

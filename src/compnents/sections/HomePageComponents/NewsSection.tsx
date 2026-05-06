@@ -75,10 +75,8 @@ export default function NewsSection() {
         return () => controller.abort();
     }, [lang]);
 
-    // default select latest (top)
     useEffect(() => {
-        if (items.length > 0) setActiveId(items[0].id);
-        else setActiveId("");
+        setActiveId("");
     }, [items, lang]);
 
     const list = useMemo(() => items, [items]); // latest -> oldest
@@ -141,14 +139,18 @@ export default function NewsSection() {
 
                                 {/* ✅ Preview = image only, rounded */}
                                 <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/10 shadow-card">
-                                    <div className="relative h-[320px] xl:h-[360px]">
+                                    <div className="relative h-[336px] xl:h-[372px]">
                                         <img
                                             src={active.image_path || FallbackImage}
                                             alt=""
                                             className={`absolute inset-0 h-full w-full ${active.image_path ? "object-cover" : "object-contain p-10"
                                                 }`}
                                             draggable={false}
-                                            loading="lazy"
+                                            loading="eager"
+                                            onError={(event) => {
+                                                event.currentTarget.src = FallbackImage;
+                                                event.currentTarget.className = "absolute inset-0 h-full w-full object-contain p-10";
+                                            }}
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
@@ -184,19 +186,23 @@ export default function NewsSection() {
                         </aside>
 
                         {/* RIGHT: List + FAQ expand (desktop + mobile text) */}
-                        <div className="space-y-3">
+                        <div className="space-y-3 lg:min-h-[336px] xl:min-h-[372px]">
                             {list.map((n, idx) => {
                                 const selected = n.id === activeId;
 
                                 return (
-                                    <div key={`${lang}-${n.id}`} className="card-surface overflow-hidden">
+                                    <div
+                                        key={`${lang}-${n.id}`}
+                                        className="overflow-hidden rounded-[8px] border border-white/10 bg-white/[0.04] shadow-[0_14px_35px_rgba(0,0,0,0.18)]"
+                                    >
                                         <button
                                             type="button"
-                                            onClick={() => setActiveId(n.id)}
+                                            onClick={() => setActiveId((current) => (current === n.id ? "" : n.id))}
+                                            aria-expanded={selected}
                                             className={`
-                        w-full px-5 py-4 flex items-start gap-4
+                        w-full min-h-[75px] px-5 py-3 flex items-start gap-4
                         transition
-                        ${selected ? "bg-white/5" : "hover:bg-white/5"}
+                        ${selected ? "bg-white/[0.07]" : "hover:bg-white/[0.06]"}
                         ${isRTL ? "text-right" : "text-left"}
                       `}
                                         >
@@ -212,7 +218,7 @@ export default function NewsSection() {
                                             </div>
 
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-[11px] uppercase tracking-wide text-core-textMuted">
+                                                <div className="text-[11px] uppercase text-core-textMuted">
                                                     • {formatDate(n.published_at, lang)}
                                                 </div>
 
@@ -237,8 +243,8 @@ export default function NewsSection() {
                                                 </div>
                                             </div>
 
-                                            <div className={`shrink-0 mt-1 ${selected ? "text-core-accent" : "text-white/60"}`}>
-                                                ↗
+                                            <div className={`shrink-0 mt-1 text-xl leading-none ${selected ? "text-core-accent" : "text-white/60"}`}>
+                                                {selected ? "−" : "+"}
                                             </div>
                                         </button>
 

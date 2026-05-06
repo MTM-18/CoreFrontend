@@ -66,6 +66,10 @@ export default function StylizedGlobe() {
     const [isCompact, setIsCompact] = useState(() =>
         typeof window !== "undefined" ? window.innerWidth < 1050 : false
     );
+    const [viewport, setViewport] = useState(() => ({
+        width: typeof window !== "undefined" ? window.innerWidth : 1280,
+        height: typeof window !== "undefined" ? window.innerHeight : 720,
+    }));
 
     // ✅ Coming soon modal state
     const [comingSoon, setComingSoon] = useState<Branch | null>(null);
@@ -130,7 +134,10 @@ export default function StylizedGlobe() {
 
     // responsive
     useEffect(() => {
-        const onResize = () => setIsCompact(window.innerWidth < 1050);
+        const onResize = () => {
+            setIsCompact(window.innerWidth < 1050);
+            setViewport({ width: window.innerWidth, height: window.innerHeight });
+        };
         window.addEventListener("resize", onResize);
         return () => window.removeEventListener("resize", onResize);
     }, []);
@@ -211,14 +218,28 @@ export default function StylizedGlobe() {
         [brandCss.orange, getName]
     );
 
+    const openBranch = useCallback(
+        (branch: Branch) => {
+            if (branch.id === "istanbul") {
+                navigate(branch.route);
+                return;
+            }
+
+            setComingSoon(branch);
+        },
+        [navigate]
+    );
+
     // labels (TS-safe)
     const htmlElement = useCallback(
         (obj: any) => {
             const d = obj as Branch;
 
             const wrap = document.createElement("div");
-            wrap.style.pointerEvents = "none";
+            wrap.style.pointerEvents = "auto";
             wrap.style.transform = "translate(-50%, -70%)";
+            wrap.style.position = "relative";
+            wrap.style.zIndex = "25";
 
             const button = document.createElement("button");
             button.type = "button";
@@ -228,10 +249,10 @@ export default function StylizedGlobe() {
             button.className =
                 "pointer-events-auto select-none whitespace-nowrap rounded-full " +
                 "px-3 py-2 text-[13px] font-extrabold tracking-wide " +
-                "text-white bg-black/60 backdrop-blur-md border border-white/15 " +
+                "text-white bg-black/75 backdrop-blur-md border border-white/20 " +
                 "transition-transform duration-150 ease-out cursor-pointer";
 
-            button.style.boxShadow = `0 0 18px ${rgbaFromCssColor(brandCss.orange, 0.55)}`;
+            button.style.boxShadow = `0 0 20px ${rgbaFromCssColor(brandCss.orange, 0.72)}`;
 
             button.onmouseenter = () => {
                 setHoveredBranchCountry(d.countryName);
@@ -253,18 +274,13 @@ export default function StylizedGlobe() {
                 ev.preventDefault();
                 ev.stopPropagation();
 
-                if (d.id === "istanbul") {
-                    navigate(d.route);
-                    return;
-                }
-
-                setComingSoon(d);
+                openBranch(d);
             };
 
             wrap.appendChild(button);
             return wrap;
         },
-        [brandCss.orange, brandCss.purple, navigate]
+        [brandCss.orange, brandCss.purple, openBranch]
     );
 
     // ribbons/halo/stars (brand-based)
@@ -417,6 +433,8 @@ export default function StylizedGlobe() {
             <div className="absolute inset-0 z-[1]">
                 <Globe
                     ref={globeRef}
+                    width={viewport.width}
+                    height={viewport.height}
                     backgroundColor="rgba(0,0,0,0)"
                     showAtmosphere={false}
                     showGraticules={false}
@@ -431,10 +449,25 @@ export default function StylizedGlobe() {
                         const name = d ? getName(d) : null;
                         setHoveredBranchCountry(name && BRANCH_COUNTRIES.has(name) ? name : null);
                     }}
-                    pointsData={[]}
+                    onPolygonClick={(d: any) => {
+                        const name = getName(d);
+                        if (name === "Turkey") navigate("/home");
+                    }}
+                    pointsData={BRANCHES}
+                    pointLat={(obj: any) => (obj as Branch).lat}
+                    pointLng={(obj: any) => (obj as Branch).lng}
+                    pointAltitude={0.045}
+                    pointRadius={0.42}
+                    pointColor={(obj: any) =>
+                        (obj as Branch).id === "istanbul"
+                            ? rgbaFromCssColor(brandCss.orange, 0.98)
+                            : "rgba(255,255,255,0.9)"
+                    }
+                    onPointClick={(obj: any) => openBranch(obj as Branch)}
                     htmlElementsData={BRANCHES}
                     htmlLat={(obj: any) => (obj as Branch).lat}
                     htmlLng={(obj: any) => (obj as Branch).lng}
+                    htmlAltitude={0.08}
                     htmlElement={htmlElement}
                 />
             </div>

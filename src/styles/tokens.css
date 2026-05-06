@@ -54,19 +54,19 @@
 }
 
 .switch-root {
-    @apply inline-flex items-center rounded-full bg-core-brand text-core-textLight text-[11px] font-medium overflow-hidden;
+    @apply inline-flex items-center rounded-full border border-white/15 bg-black/45 text-core-textLight text-[11px] font-semibold overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.28)] backdrop-blur-xl;
 }
 
 .switch-option {
-    @apply flex-1 text-center px-4 py-1 cursor-pointer select-none transition-colors;
+    @apply flex-1 text-center px-3 py-1.5 cursor-pointer select-none transition-colors;
 }
 
 .switch-option-active {
-    @apply bg-core-brand text-core-lightBg;
+    @apply bg-core-accent text-white;
 }
 
 .switch-option-inactive {
-    @apply bg-core-lightBg text-core-brand;
+    @apply bg-transparent text-white/75 hover:text-white hover:bg-white/10;
 }
 
 
