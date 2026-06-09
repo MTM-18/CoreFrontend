@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from "react";
-import gsap from "gsap";
 
 import ToggleSwitch from "../ui/ToggleSwitch";
 import LogoColored from "../../assets/logo/fullColorLogo.svg";
@@ -51,16 +50,11 @@ export default function Navbar() {
     const activeItem = navItems.find((item) => isPathActive(item.to)) || navItems[0];
 
     /* -------------------- DESKTOP: sliding capsule -------------------- */
-    const [activeIndex, setActiveIndex] = useState<number>(0);
+    const activeIndex = Math.max(0, navItems.findIndex((item) => isPathActive(item.to)));
     const navListRef = useRef<HTMLDivElement | null>(null);
     const capsuleRef = useRef<HTMLDivElement | null>(null);
     const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const capsuleInitedRef = useRef(false);
-
-    useEffect(() => {
-        const idx = navItems.findIndex((item) => isPathActive(item.to));
-        setActiveIndex(idx === -1 ? 0 : idx);
-    }, [navItems, isPathActive]);
 
     const moveCapsule = useCallback(
         (immediate = false) => {
@@ -76,20 +70,12 @@ export default function Navbar() {
             const x = aRect.left - cRect.left;
             const w = aRect.width;
 
-            // let GSAP own the vertical centering (no Tailwind translate conflicts)
-            if (!capsuleInitedRef.current || immediate) {
-                gsap.set(capsule, { x, width: w, yPercent: -50 });
-                capsuleInitedRef.current = true;
-                return;
-            }
-
-            gsap.to(capsule, {
-                x,
-                width: w,
-                duration: 0.35,
-                ease: "power3.out",
-                overwrite: true,
-            });
+            capsule.style.transition = !capsuleInitedRef.current || immediate
+                ? "none"
+                : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), width 350ms cubic-bezier(0.22, 1, 0.36, 1)";
+            capsule.style.transform = `translate3d(${x}px, -50%, 0)`;
+            capsule.style.width = `${w}px`;
+            capsuleInitedRef.current = true;
         },
         [activeIndex]
     );
@@ -110,34 +96,8 @@ export default function Navbar() {
         return () => window.removeEventListener("resize", onResize);
     }, [moveCapsule]);
 
-    /* -------------------- MOBILE: dropdown animation -------------------- */
-    const mobileDropdownRef = useRef<HTMLDivElement | null>(null);
+    /* -------------------- MOBILE: dropdown -------------------- */
     const [mobileHoverIndex, setMobileHoverIndex] = useState<number | null>(null);
-
-    useEffect(() => {
-        if (!mobileMenuOpen || !mobileDropdownRef.current) return;
-
-        const ctx = gsap.context(() => {
-            gsap.from(mobileDropdownRef.current, {
-                opacity: 0,
-                y: -8,
-                scale: 0.97,
-                duration: 0.15,
-                ease: "power2.out",
-            });
-
-            gsap.from(".mobile-nav-item", {
-                opacity: 0,
-                y: 10,
-                duration: 0.22,
-                ease: "power2.out",
-                stagger: 0.05,
-                delay: 0.02,
-            });
-        }, mobileDropdownRef);
-
-        return () => ctx.revert();
-    }, [mobileMenuOpen]);
 
     useEffect(() => {
         if (!mobileMenuOpen) return;
@@ -272,7 +232,6 @@ export default function Navbar() {
 
                 {mobileMenuOpen && (
                     <div
-                        ref={mobileDropdownRef}
                         className="
               mt-2 w-full max-w-xs self-center
               rounded-3xl
@@ -282,6 +241,7 @@ export default function Navbar() {
               border border-black/10 dark:border-white/15
               px-4 py-3
               shadow-[0_18px_50px_rgba(0,0,0,0.35)]
+              origin-top transition duration-200 ease-out
             "
                     >
                         <nav className="flex flex-col gap-1">

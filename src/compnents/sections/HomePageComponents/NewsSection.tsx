@@ -12,6 +12,23 @@ type NewsItem = {
     published_at: string;
 };
 
+type NewsApiItem = {
+    id?: unknown;
+    title?: unknown;
+    body?: unknown;
+    image_path?: unknown;
+    published_at?: unknown;
+};
+
+type NewsApiResponse = {
+    ok?: boolean;
+    items?: NewsApiItem[];
+};
+
+function nullableString(value: unknown): string | null {
+    return typeof value === "string" ? value : null;
+}
+
 function formatDate(iso: string, lang: "ar" | "en") {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return "";
@@ -46,7 +63,7 @@ export default function NewsSection() {
                     headers: { Accept: "application/json" },
                 });
 
-                const data = await res.json();
+                const data = await res.json() as NewsApiResponse;
 
                 if (!res.ok || !data?.ok) {
                     setError("Failed to load news");
@@ -54,17 +71,17 @@ export default function NewsSection() {
                     return;
                 }
 
-                const mapped: NewsItem[] = (data.items ?? []).map((n: any) => ({
+                const mapped: NewsItem[] = (data.items ?? []).map((n) => ({
                     id: String(n.id),
                     title: String(n.title ?? ""),
-                    body: n.body ?? null,
-                    image_path: n.image_path ?? null,
+                    body: nullableString(n.body),
+                    image_path: nullableString(n.image_path),
                     published_at: String(n.published_at ?? ""),
                 }));
 
                 setItems(mapped);
-            } catch (e: any) {
-                if (e?.name === "AbortError") return;
+            } catch (error: unknown) {
+                if (error instanceof DOMException && error.name === "AbortError") return;
                 setError("Failed to load news");
                 setItems([]);
             } finally {

@@ -4,6 +4,7 @@ import OurSectionsTable from "../compnents/sections/AboutUsComponents/ValuesSect
 import DonorsSection from "../compnents/sections/AboutUsComponents/Dononrs";
 import PhotoLibrarySection from "../compnents/sections/AboutUsComponents/PhotoLibrarySection";
 import TeamSection from "../compnents/sections/AboutUsComponents/TeamSection";
+import SdgSection from "../compnents/sections/AboutUsComponents/SdgSection";
 
 export default function AboutPage() {
     return (
@@ -12,6 +13,7 @@ export default function AboutPage() {
                 <main>
                     <VisionMissionSection />
                     <OurSectionsTable />
+                    <SdgSection />
                     <TeamSection />
                     <DonorsSection />
                     <PhotoLibrarySection />

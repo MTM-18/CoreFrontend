@@ -8,6 +8,7 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const ComingSoonPage = lazy(() => import("./pages/ComingSoonPage"));
 const StylizedGlobe = lazy(() => import("./pages/StylizedGlobe"));
+const PodcastPage = lazy(() => import("./pages/PodcastPage"));
 
 import Navbar from "./compnents/layout/Navbar";
 import Footer from "./compnents/layout/Footer";
@@ -54,7 +55,7 @@ export default function App() {
                 <Route path="workspace" element={<WorkspacePage />} />
                 <Route path="about" element={<AboutPage />} />
                 <Route path="contact" element={<ContactPage />} />
-                <Route path="podcast" element={<ComingSoonPage titleKey="nav.podcast" />} />
+                <Route path="podcast" element={<PodcastPage />} />
                 <Route path="reports" element={<ComingSoonPage titleKey="nav.reports" />} />
                 <Route path="certificates" element={<ComingSoonPage titleKey="nav.certificates" />} />
                 <Route path="blog" element={<ComingSoonPage titleKey="nav.blog" />} />

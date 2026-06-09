@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { ComponentType, ReactNode } from "react";
 import {
     FaBrain,
+    FaBriefcase,
     FaBullhorn,
     FaCalculator,
     FaCamera,
@@ -15,9 +17,11 @@ import {
     FaLaptopCode,
     FaPenNib,
     FaRocket,
+    FaStar,
     FaShoppingCart,
     FaTasks,
     FaTruck,
+    FaUsers,
     FaVideo,
 } from "react-icons/fa";
 
@@ -288,10 +292,7 @@ export default function ProgramsPage() {
                 )}
 
                 {active === "internship" && (
-                    <ComingSoon
-                        title={t(`${baseKey}.comingSoon.title`)}
-                        body={t(`${baseKey}.comingSoon.desc`)}
-                    />
+                    <InternshipProgram isAr={isAr} />
                 )}
             </div>
         </section>
@@ -302,8 +303,8 @@ function Vocational({
                         t,
                         getArray,
                         baseKey,
-                    }: {
-    t: (key: string, options?: any) => string;
+}: {
+    t: TFunction;
     getArray: <T,>(key: string) => T[];
     baseKey: string;
 }) {
@@ -348,8 +349,8 @@ function Entrepreneurship({
                               getArray,
                               baseKey,
                               logos,
-                          }: {
-    t: (key: string, options?: any) => string;
+}: {
+    t: TFunction;
     getArray: <T,>(key: string) => T[];
     baseKey: string;
     logos: string[];
@@ -389,6 +390,122 @@ function Entrepreneurship({
 
             <SectionCard title={t(`${baseKey}.entrepreneurship.stagesTitle`)}>
                 <StagesTimeline stages={stages} />
+            </SectionCard>
+        </div>
+    );
+}
+
+const INTERNSHIP_CONTENT = {
+    en: {
+        title: "Training and Workplace Immersion Program",
+        intro: "Core Istanbul’s practical training program gives youth, students, and graduates the opportunity to gain real professional experience in a structured work environment. Participants contribute to training programs, project management, marketing, design, monitoring and evaluation, and communication with beneficiaries and partners.",
+        goal: "The program develops practical skills and improves readiness for the labor market through an applied experience that combines learning, responsibility, and teamwork.",
+        offersTitle: "What does the program offer?",
+        offers: [
+            "Real work experience inside an entrepreneurial and educational organization.",
+            "Practical training across multiple fields based on organizational needs.",
+            "Development of communication, organization, time management, and teamwork skills.",
+            "Opportunities to contribute to programs and projects serving youth and the community.",
+            "Supervision and ongoing support from the Core Istanbul team.",
+            "A training certificate after successfully completing the program.",
+        ],
+        fieldsTitle: "Training fields",
+        fields: [
+            "Program and project management",
+            "Marketing and content creation",
+            "Graphic design",
+            "Photography and video editing",
+            "Monitoring and evaluation",
+            "Partnerships and relations",
+            "Administrative support and coordination",
+        ],
+    },
+    ar: {
+        title: "برنامج المعايشة والتدريب",
+        intro: "يقدّم برنامج التدريب العملي في Core Istanbul فرصة للشباب والطلاب والخريجين لاكتساب خبرة مهنية حقيقية داخل بيئة عمل احترافية، من خلال المشاركة في تنفيذ البرامج التدريبية، إدارة المشاريع، التسويق، التصميم، المتابعة والتقييم، والتواصل مع المستفيدين والشركاء.",
+        goal: "يهدف البرنامج إلى تطوير مهارات المتدربين العملية، وتعزيز جاهزيتهم لسوق العمل، من خلال تجربة تطبيقية تجمع بين التعلم، المسؤولية، والعمل ضمن فريق.",
+        offersTitle: "ماذا يقدّم البرنامج؟",
+        offers: [
+            "تجربة عمل حقيقية داخل مؤسسة ريادية وتعليمية.",
+            "تدريب عملي في مجالات متعددة حسب الاحتياج.",
+            "تطوير مهارات التواصل، التنظيم، إدارة الوقت، والعمل الجماعي.",
+            "فرصة للمشاركة في برامج ومشاريع تخدم الشباب والمجتمع.",
+            "إشراف ومتابعة من فريق Core Istanbul.",
+            "شهادة تدريب عند إتمام فترة التدريب بنجاح.",
+        ],
+        fieldsTitle: "مجالات التدريب",
+        fields: [
+            "إدارة البرامج والمشاريع",
+            "التسويق وصناعة المحتوى",
+            "التصميم الجرافيكي",
+            "التصوير والمونتاج",
+            "المتابعة والتقييم",
+            "العلاقات والشراكات",
+            "الدعم الإداري والتنسيق",
+        ],
+    },
+};
+
+function InternshipProgram({ isAr }: { isAr: boolean }) {
+    const content = isAr ? INTERNSHIP_CONTENT.ar : INTERNSHIP_CONTENT.en;
+    const fieldIcons = [FaBriefcase, FaBullhorn, FaPenNib, FaVideo, FaTasks, FaHandshake, FaUsers];
+
+    return (
+        <div className="space-y-4">
+            <SectionCard>
+                <div className="grid gap-6 lg:grid-cols-[1fr,auto] lg:items-start">
+                    <div>
+                        <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight md:text-2xl">
+                            {content.title}
+                        </h2>
+                        <p className="mt-4 text-sm leading-8 text-core-textDark dark:text-core-textLight">
+                            {content.intro}
+                        </p>
+                        <p className="mt-3 text-sm leading-8 text-core-textDark dark:text-core-textLight">
+                            {content.goal}
+                        </p>
+                    </div>
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-core-brand to-core-accent text-3xl text-white shadow-lg">
+                        <FaBriefcase />
+                    </div>
+                </div>
+            </SectionCard>
+
+            <SectionCard title={content.offersTitle}>
+                <div className="grid gap-3 md:grid-cols-2">
+                    {content.offers.map((item) => (
+                        <div
+                            key={item}
+                            className="flex items-start gap-3 rounded-2xl border border-black/8 bg-white/60 p-4 dark:border-white/10 dark:bg-white/5"
+                        >
+                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-core-accent/15 text-core-accent">
+                                <FaStar className="text-xs" />
+                            </div>
+                            <p className="text-sm leading-7 text-core-textDark dark:text-core-textLight">{item}</p>
+                        </div>
+                    ))}
+                </div>
+            </SectionCard>
+
+            <SectionCard title={content.fieldsTitle}>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {content.fields.map((field, index) => {
+                        const Icon = fieldIcons[index] ?? FaBriefcase;
+                        return (
+                            <div
+                                key={field}
+                                className="flex items-center gap-3 rounded-2xl bg-core-brand/5 p-4 dark:bg-white/5"
+                            >
+                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-core-brand text-white dark:bg-core-textAccent dark:text-black">
+                                    <Icon />
+                                </div>
+                                <span className="text-sm font-semibold leading-6 text-core-textDark dark:text-core-textLight">
+                                    {field}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
             </SectionCard>
         </div>
     );

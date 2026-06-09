@@ -18,7 +18,32 @@ html[lang="en"] body {
 @tailwind utilities;
 
 /* 3) Global styles */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
 body {
   @apply bg-core-darkBg text-core-textLight antialiased;
   margin: 0;
+  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.podcast-episode-layout {
+    container-name: podcast-episodes;
+    container-type: inline-size;
+}
+
+@container podcast-episodes (min-width: 1360px) {
+    .podcast-episode-sidebar {
+        grid-template-rows: 2fr 3fr;
+        border-top-width: 0;
+        border-inline-start-width: 1px;
+    }
 }

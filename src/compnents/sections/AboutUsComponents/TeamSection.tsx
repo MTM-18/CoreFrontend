@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 
 import abdulrahmanImg from "../../../assets/team/abdulrahman.jpg";
-import mertImg from "../../../assets/team/Fahd.png";
+import mertImg from "../../../assets/team/modhar.png";
 import albaraaImg from "../../../assets/team/albaraa.jpg";
-import dumanImg from "../../../assets/team/modhar.png";
+import dumanImg from "../../../assets/team/Fahd.png";
 import hussainImg from "../../../assets/team/Hussain.png";
 import laraImg from "../../../assets/team/lara.jpg";
 import habibaImg from "../../../assets/team/habiba.jpg";
@@ -138,6 +138,7 @@ export default function TeamSection() {
                                     alt={member.name[lang]}
                                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                     loading="lazy"
+                                    decoding="async"
                                 />
                                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                             </div>

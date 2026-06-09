@@ -1,19 +1,20 @@
 // src/pages/StylizedGlobe.tsx
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Globe from "react-globe.gl";
+import type { GlobeMethods } from "react-globe.gl";
 import * as topojson from "topojson-client";
 import * as THREE from "three";
 import { useNavigate } from "react-router-dom";
-import { gsap } from "gsap";
-
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
 
 import BackgroundOrbits from "../compnents/layout/BackgroundOrbits";
 import coreLogo from "../assets/logo/fullWhiteLogo.svg";
 
-const WORLD_TOPO = "/data/countries-110m.json";
+const WORLD_TOPO = `${import.meta.env.BASE_URL}data/countries-110m.json`;
 const BRANCH_COUNTRIES = new Set(["Turkey", "Syria", "Iraq"]);
+const BRAND_COLORS = {
+    purple: "rgb(106, 27, 154)",
+    orange: "rgb(243, 123, 39)",
+};
 
 type Branch = {
     id: string;
@@ -22,6 +23,16 @@ type Branch = {
     lat: number;
     lng: number;
     route: string;
+};
+
+type CountryFeature = {
+    properties?: Record<string, unknown> | null;
+};
+
+type WorldTopology = {
+    objects?: {
+        countries?: Parameters<typeof topojson.feature>[1];
+    };
 };
 
 const BRANCHES: Branch[] = [
@@ -112,7 +123,7 @@ function createBranchTagSprite(branch: Branch, accentColor: string) {
 export default function StylizedGlobe() {
     const navigate = useNavigate();
 
-    const [polys, setPolys] = useState<any[]>([]);
+    const [polys, setPolys] = useState<CountryFeature[]>([]);
     const [loading, setLoading] = useState(true);
     const [hoveredBranchCountry, setHoveredBranchCountry] = useState<string | null>(null);
     const [isCompact, setIsCompact] = useState(() =>
@@ -136,33 +147,19 @@ export default function StylizedGlobe() {
         return () => window.removeEventListener("keydown", onKey);
     }, [comingSoon, closeComingSoon]);
 
-    const globeRef = useRef<any>(null);
+    const globeRef = useRef<GlobeMethods | undefined>(undefined);
     const ribbonsRef = useRef<Array<{ mesh: THREE.Mesh; spin: number }>>([]);
     const haloRef = useRef<THREE.Mesh | null>(null);
     const starsRef = useRef<THREE.Points | null>(null);
+    const branchSpritesRef = useRef<Set<THREE.Sprite>>(new Set());
     const rafRef = useRef<number | null>(null);
 
-    // ✅ Tailwind color probes (reads core.brand & core.accent from CSS)
-    const brandProbeRef = useRef<HTMLSpanElement | null>(null);
-    const accentProbeRef = useRef<HTMLSpanElement | null>(null);
+    const brandCss = BRAND_COLORS;
 
-    const [brandCss, setBrandCss] = useState({
-        purple: "rgb(106, 27, 154)", // fallback matches your tailwind config core.brand
-        orange: "rgb(243, 123, 39)" // fallback matches your tailwind config core.accent
-    });
-
-    useLayoutEffect(() => {
-        const purple = brandProbeRef.current ? getComputedStyle(brandProbeRef.current).color : null;
-        const orange = accentProbeRef.current ? getComputedStyle(accentProbeRef.current).color : null;
-
-        setBrandCss((prev) => ({
-            purple: purple || prev.purple,
-            orange: orange || prev.orange
-        }));
-    }, []);
-
-    const getName = useCallback((d: any) => {
-        return d?.properties?.name ?? d?.properties?.NAME_LONG ?? d?.properties?.NAME ?? "";
+    const getName = useCallback((feature: CountryFeature | null) => {
+        const properties = feature?.properties;
+        const name = properties?.name ?? properties?.NAME_LONG ?? properties?.NAME;
+        return typeof name === "string" ? name : "";
     }, []);
 
     // load polygons
@@ -170,11 +167,15 @@ export default function StylizedGlobe() {
         let mounted = true;
 
         fetch(WORLD_TOPO)
-            .then((r) => r.json())
+            .then((response) => response.json() as Promise<WorldTopology>)
             .then((topology) => {
                 if (!mounted) return;
-                const gj = topojson.feature(topology, (topology as any).objects.countries) as any;
-                setPolys(gj.features || []);
+                const countries = topology.objects?.countries;
+                if (!countries) throw new Error("Country topology is missing");
+
+                const geoJson = topojson.feature(topology as never, countries);
+                const features = "features" in geoJson ? geoJson.features : [geoJson];
+                setPolys(features as CountryFeature[]);
                 setLoading(false);
             })
             .catch(() => setLoading(false));
@@ -201,7 +202,7 @@ export default function StylizedGlobe() {
 
         g.pointOfView({ lat: 10, lng: 10, altitude: 3.5 }, 0);
 
-        const target = { lat: 36, lng: 37.5, altitude: isCompact ? 0.75 : 0.55 };
+        const target = { lat: 35, lng: 37.5, altitude: isCompact ? 1.15 : 0.85 };
         const t = setTimeout(() => g.pointOfView(target, 3500), 200);
 
         const controls = g.controls?.();
@@ -236,6 +237,8 @@ export default function StylizedGlobe() {
         });
     }, [brandCss.purple]);
 
+    useEffect(() => () => globeMaterial.dispose(), [globeMaterial]);
+
     // softer oranges for non-branch
     const orangePalette = useMemo(() => {
         return [0.75, 0.65, 0.55, 0.45, 0.35].map((t) => mixRgb(brandCss.orange, "rgb(255,255,255)", t));
@@ -250,7 +253,8 @@ export default function StylizedGlobe() {
     );
 
     const polygonCapColor = useCallback(
-        (d: any) => {
+        (feature: object) => {
+            const d = feature as CountryFeature;
             const name = getName(d);
             if (BRANCH_COUNTRIES.has(name)) {
                 const alpha = hoveredBranchCountry === name ? 1 : 0.95;
@@ -262,7 +266,8 @@ export default function StylizedGlobe() {
     );
 
     const polygonStrokeColor = useCallback(
-        (d: any) => {
+        (feature: object) => {
+            const d = feature as CountryFeature;
             const name = getName(d);
             if (BRANCH_COUNTRIES.has(name)) return "rgba(255,241,224,0.98)";
             return rgbaFromCssColor(brandCss.orange, 0.45);
@@ -288,6 +293,7 @@ export default function StylizedGlobe() {
         if (!g) return;
 
         const scene: THREE.Scene = g.scene();
+        const branchSprites = branchSpritesRef.current;
         const R = g.getGlobeRadius ? g.getGlobeRadius() : 100;
 
         const addRibbon = () => {
@@ -362,23 +368,42 @@ export default function StylizedGlobe() {
         rafRef.current = requestAnimationFrame(tick);
 
         return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            ribbonsRef.current.forEach(({ mesh }) => scene.remove(mesh));
+            if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+
+            ribbonsRef.current.forEach(({ mesh }) => {
+                scene.remove(mesh);
+                mesh.geometry.dispose();
+                (mesh.material as THREE.Material).dispose();
+            });
             ribbonsRef.current = [];
-            if (haloRef.current) scene.remove(haloRef.current);
+
+            if (haloRef.current) {
+                scene.remove(haloRef.current);
+                haloRef.current.geometry.dispose();
+                (haloRef.current.material as THREE.Material).dispose();
+            }
             haloRef.current = null;
-            if (starsRef.current) scene.remove(starsRef.current);
+
+            if (starsRef.current) {
+                scene.remove(starsRef.current);
+                starsRef.current.geometry.dispose();
+                (starsRef.current.material as THREE.Material).dispose();
+            }
             starsRef.current = null;
+
+            branchSprites.forEach((sprite) => {
+                const material = sprite.material as THREE.SpriteMaterial;
+                material.map?.dispose();
+                material.dispose();
+            });
+            branchSprites.clear();
             document.body.style.cursor = "default";
         };
     }, [brandCss.orange, brandCss.purple, polys.length]);
 
     return (
         <div className="relative w-full h-[100dvh] overflow-hidden" style={{ background: bgGradient }}>
-            {/* Tailwind probes (hidden) */}
-            <span ref={brandProbeRef} className="hidden text-core-brand" />
-            <span ref={accentProbeRef} className="hidden text-core-accent" />
-
             {/* ✅ use your existing background */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <BackgroundOrbits />
@@ -444,27 +469,31 @@ export default function StylizedGlobe() {
                     polygonStrokeColor={polygonStrokeColor}
                     polygonAltitude={() => 0.02}
                     polygonsTransitionDuration={500}
-                    onPolygonHover={(d: any) => {
-                        const name = d ? getName(d) : null;
+                    onPolygonHover={(polygon: object | null) => {
+                        const name = polygon ? getName(polygon as CountryFeature) : null;
                         setHoveredBranchCountry(name && BRANCH_COUNTRIES.has(name) ? name : null);
                     }}
-                    onPolygonClick={(d: any) => {
-                        const name = getName(d);
+                    onPolygonClick={(polygon: object) => {
+                        const name = getName(polygon as CountryFeature);
                         if (name === "Turkey") navigate("/home");
                     }}
                     pointsData={BRANCHES}
-                    pointLat={(obj: any) => (obj as Branch).lat}
-                    pointLng={(obj: any) => (obj as Branch).lng}
+                    pointLat={(obj: object) => (obj as Branch).lat}
+                    pointLng={(obj: object) => (obj as Branch).lng}
                     pointAltitude={0.045}
                     pointRadius={0.42}
-                    pointColor={(obj: any) =>
+                    pointColor={(obj: object) =>
                         (obj as Branch).id === "istanbul"
                             ? rgbaFromCssColor(brandCss.orange, 0.98)
                             : "rgba(255,255,255,0.9)"
                     }
-                    onPointClick={(obj: any) => openBranch(obj as Branch)}
+                    onPointClick={(obj: object) => openBranch(obj as Branch)}
                     customLayerData={BRANCHES}
-                    customThreeObject={(obj: object) => createBranchTagSprite(obj as Branch, brandCss.orange)}
+                    customThreeObject={(obj: object) => {
+                        const sprite = createBranchTagSprite(obj as Branch, brandCss.orange);
+                        branchSpritesRef.current.add(sprite);
+                        return sprite;
+                    }}
                     customThreeObjectUpdate={(obj: THREE.Object3D, objData: object) => {
                         const branch = objData as Branch;
                         const g = globeRef.current;
@@ -477,9 +506,9 @@ export default function StylizedGlobe() {
                         const labelWidth = isCompact ? radius * 0.11 : radius * 0.13;
                         obj.scale.set(labelWidth, labelWidth * 0.28, 1);
                     }}
-                    customLayerLabel={(obj: any) => (obj as Branch).label}
-                    onCustomLayerClick={(obj: any) => openBranch(obj as Branch)}
-                    onCustomLayerHover={(obj: any | null) => {
+                    customLayerLabel={(obj: object) => (obj as Branch).label}
+                    onCustomLayerClick={(obj: object) => openBranch(obj as Branch)}
+                    onCustomLayerHover={(obj: object | null) => {
                         setHoveredBranchCountry(obj ? (obj as Branch).countryName : null);
                         document.body.style.cursor = obj ? "pointer" : "grab";
                     }}
