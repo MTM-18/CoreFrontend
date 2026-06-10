@@ -30,8 +30,7 @@ export default function Navbar() {
             { to: "/home/workspace", label: t("nav.workspace") },
             { to: "/home/podcast", label: t("nav.podcast") },
             { to: "/home/reports", label: t("nav.reports") },
-            { to: "/home/certificates", label: t("nav.certificates") },
-            { to: "/home/blog", label: t("nav.blog") },
+            { to: "/home/stories", label: t("nav.stories") },
             { to: "/home/contact", label: t("nav.contact") },
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,7 +115,6 @@ export default function Navbar() {
             className="
         fixed top-0 inset-x-0 z-50
         bg-white/0 dark:bg-black/0
-        backdrop-blur-md
       "
         >
             {/* ================= DESKTOP (>= 1050px) ================= */}
@@ -191,7 +189,14 @@ export default function Navbar() {
             </div>
 
             {/* ================= MOBILE (< 1050px) ================= */}
-            <div className="min-[1424px]:hidden layout-shell px-4 pt-2 pb-3 flex flex-col gap-2">
+            {mobileMenuOpen && (
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] bg-gradient-to-b from-[#120918]/55 via-[#120918]/30 to-transparent backdrop-blur-xl [mask-image:linear-gradient(to_bottom,black_0%,black_72%,transparent_100%)] min-[1424px]:hidden"
+                />
+            )}
+
+            <div className="relative z-10 min-[1424px]:hidden layout-shell px-4 pt-2 pb-3 flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center flex-shrink-0">
                         <img
@@ -235,12 +240,12 @@ export default function Navbar() {
                         className="
               mt-2 w-full max-w-xs self-center
               rounded-3xl
-              bg-white/95 text-black
-              dark:bg-black/70 dark:text-white
-              backdrop-blur-xl
+              bg-white/90 text-black
+              dark:bg-[#120916]/80 dark:text-white
+              backdrop-blur-2xl
               border border-black/10 dark:border-white/15
               px-4 py-3
-              shadow-[0_18px_50px_rgba(0,0,0,0.35)]
+              shadow-[0_18px_60px_rgba(0,0,0,0.28)]
               origin-top transition duration-200 ease-out
             "
                     >

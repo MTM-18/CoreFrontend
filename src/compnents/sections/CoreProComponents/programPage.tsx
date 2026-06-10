@@ -252,8 +252,8 @@ export default function ProgramsPage() {
                 </p>
             </div>
 
-            <div className="mb-6 flex justify-start sm:justify-center">
-                <div className="flex max-w-full gap-2 overflow-x-auto rounded-full border border-black/10 bg-white/70 p-1 dark:border-white/10 dark:bg-white/5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mb-6 w-full">
+                <div className="flex w-full gap-2 overflow-x-auto rounded-full border border-black/10 bg-white/70 p-1 dark:border-white/10 dark:bg-white/5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
@@ -263,7 +263,7 @@ export default function ProgramsPage() {
                             type="button"
                             onClick={() => setActive(tab.key)}
                             className={[
-                                "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition",
+                                "min-w-max flex-1 rounded-full px-4 py-2 text-sm font-medium transition sm:min-w-0",
                                 active === tab.key
                                     ? "bg-core-brand text-white dark:bg-core-textAccent dark:text-black"
                                     : "text-core-textDark hover:bg-black/5 dark:text-core-textLight dark:hover:bg-white/10",
@@ -453,21 +453,16 @@ function InternshipProgram({ isAr }: { isAr: boolean }) {
     return (
         <div className="space-y-4">
             <SectionCard>
-                <div className="grid gap-6 lg:grid-cols-[1fr,auto] lg:items-start">
-                    <div>
-                        <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight md:text-2xl">
-                            {content.title}
-                        </h2>
-                        <p className="mt-4 text-sm leading-8 text-core-textDark dark:text-core-textLight">
-                            {content.intro}
-                        </p>
-                        <p className="mt-3 text-sm leading-8 text-core-textDark dark:text-core-textLight">
-                            {content.goal}
-                        </p>
-                    </div>
-                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-core-brand to-core-accent text-3xl text-white shadow-lg">
-                        <FaBriefcase />
-                    </div>
+                <div>
+                    <h2 className="text-xl font-semibold text-core-textDark dark:text-core-textLight md:text-2xl">
+                        {content.title}
+                    </h2>
+                    <p className="mt-4 text-sm leading-8 text-core-textDark dark:text-core-textLight">
+                        {content.intro}
+                    </p>
+                    <p className="mt-3 text-sm leading-8 text-core-textDark dark:text-core-textLight">
+                        {content.goal}
+                    </p>
                 </div>
             </SectionCard>
 

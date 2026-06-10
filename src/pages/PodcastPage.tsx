@@ -166,6 +166,15 @@ export default function PodcastPage() {
     });
     const suppressShortClickRef = useRef(false);
     const activeEpisode = EPISODES.find((episode) => episode.videoId === activeVideoId) ?? EPISODES[0];
+    const activeEpisodeShorts = YOUTUBE_SHORTS.filter(
+        (short) => short.episode === activeEpisode.number
+    );
+
+    const selectEpisode = (videoId: string) => {
+        setActiveVideoId(videoId);
+        setActiveShort(null);
+        if (shortsRef.current) shortsRef.current.scrollLeft = 0;
+    };
 
     useEffect(() => {
         if (!activeShort) return;
@@ -261,7 +270,10 @@ export default function PodcastPage() {
 
     return (
         <PageShell>
-            <section className="layout-shell mx-auto overflow-hidden py-10 md:py-16" dir={isAr ? "rtl" : "ltr"}>
+            <section
+                className="mx-auto w-full max-w-6xl overflow-hidden px-4 py-10 sm:px-6 md:py-16 lg:px-0"
+                dir={isAr ? "rtl" : "ltr"}
+            >
                 <header className="max-w-5xl py-3 md:py-5">
                     <h1 className="text-3xl font-semibold leading-tight text-white md:text-5xl">
                         {isAr ? "حوارات ملهمة وتجارب حقيقية" : "Real Stories. Practical Conversations."}
@@ -274,8 +286,8 @@ export default function PodcastPage() {
                         {isAr ? "أحدث الحلقات" : "Latest Episodes"}
                     </h2>
 
-                    <div className="podcast-episode-layout flex flex-wrap items-stretch overflow-hidden rounded-[24px] border border-white/10 bg-black/25 shadow-[0_24px_70px_rgba(0,0,0,0.3)]">
-                        <div className="aspect-video min-w-0 basis-[900px] grow-[999] bg-black">
+                    <div className="podcast-episode-layout overflow-hidden rounded-[24px] border border-white/10 bg-black/25 shadow-[0_24px_70px_rgba(0,0,0,0.3)]">
+                        <div className="aspect-video w-full bg-black">
                             <iframe
                                 key={activeEpisode.videoId}
                                 src={`https://www.youtube-nocookie.com/embed/${activeEpisode.videoId}?rel=0`}
@@ -287,34 +299,31 @@ export default function PodcastPage() {
                             />
                         </div>
 
-                        <aside className="podcast-episode-sidebar grid min-h-0 min-w-0 basis-[460px] grow grid-rows-[auto_auto] border-t border-white/10 bg-black/20">
-                            <div className="flex flex-col justify-center bg-gradient-to-br from-white/[0.07] to-transparent p-6 2xl:p-8">
-                                <h3 className="text-xl font-semibold leading-8 text-white xl:text-2xl xl:leading-9 2xl:text-3xl 2xl:leading-[1.35]">
+                        <aside className="podcast-episode-sidebar border-t border-white/10 bg-black/20">
+                            <div className="bg-gradient-to-br from-white/[0.07] to-transparent p-5 sm:p-6 md:p-8">
+                                <h3 className="max-w-4xl text-2xl font-semibold leading-tight text-white md:text-3xl">
                                     {activeEpisode.title[lang]}
                                 </h3>
-                                <p className="mt-4 text-sm font-semibold leading-6 text-white/65">
+                                <p className="mt-3 text-sm font-semibold leading-6 text-white">
                                     {isAr ? "الضيف: " : "Guest: "}
                                     {activeEpisode.guest[lang]}
                                 </p>
                             </div>
-                            <div className="flex min-h-0 flex-col">
-                                <div className="border-t border-white/10 px-4 py-3 text-sm font-semibold text-white/75">
-                                    {isAr ? "الحلقات" : "Episodes"}
+                            <div>
+                                <div className="border-t border-white/10 px-5 py-4 text-sm font-semibold text-white/75 sm:px-6">
+                                    {isAr ? "الحلقات التالية" : "Next Episodes"}
                                 </div>
-                                <div
-                                    className="grid min-h-0 flex-1"
-                                    style={{ gridTemplateRows: `repeat(${EPISODES.length}, minmax(0, 1fr))` }}
-                                >
+                                <div className="grid gap-px bg-white/10 md:grid-cols-2">
                                     {EPISODES.map((episode) => {
                                         const isActive = episode.videoId === activeEpisode.videoId;
                                         return (
                                             <button
                                                 key={episode.videoId}
                                                 type="button"
-                                                onClick={() => setActiveVideoId(episode.videoId)}
+                                                onClick={() => selectEpisode(episode.videoId)}
                                                 className={[
-                                                    "grid min-h-[130px] w-full grid-cols-[180px,minmax(0,1fr)] content-center items-center gap-4 overflow-hidden p-4 text-start transition sm:grid-cols-[220px,minmax(0,1fr)] 2xl:min-h-0 2xl:grid-cols-[180px,minmax(0,1fr)]",
-                                                    isActive ? "bg-white/10 shadow-[inset_3px_0_0_#f37b27]" : "hover:bg-white/[0.06]",
+                                                    "grid w-full grid-cols-[120px,minmax(0,1fr)] items-center gap-4 overflow-hidden bg-[#1a0b1b]/95 p-4 text-start transition sm:grid-cols-[170px,minmax(0,1fr)]",
+                                                    isActive ? "bg-white/10 shadow-[inset_0_3px_0_#f37b27]" : "hover:bg-white/[0.06]",
                                                 ].join(" ")}
                                             >
                                                 <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
@@ -326,13 +335,13 @@ export default function PodcastPage() {
                                                         className="h-full w-full object-cover"
                                                     />
                                                     <span className="absolute inset-0 grid place-items-center bg-black/15">
-                                                        <span className="grid h-8 w-8 place-items-center rounded-full bg-red-600 text-[10px] text-white shadow-lg">
+                                                        <span className="grid h-9 w-9 place-items-center rounded-full bg-red-600 text-[11px] text-white shadow-lg">
                                                             <FaPlay className="ms-0.5" />
                                                         </span>
                                                     </span>
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <h4 className="line-clamp-3 break-words text-sm font-semibold leading-5 text-white">
+                                                    <h4 className="line-clamp-3 break-words text-sm font-semibold leading-6 text-white sm:text-base">
                                                         {episode.title[lang]}
                                                     </h4>
                                                 </div>
@@ -354,10 +363,10 @@ export default function PodcastPage() {
                                     {isAr ? "مقتطفات قصيرة" : "YouTube Shorts"}
                                 </h2>
                             </div>
-                            <p className="mt-2 text-sm text-white/55">
+                            <p className="mt-2 text-sm text-white">
                                 {isAr
-                                    ? "أفكار سريعة ولحظات مختارة من حلقات البودكاست."
-                                    : "Quick ideas and selected moments from the podcast episodes."}
+                                    ? "أفكار سريعة ولحظات مختارة من الحلقة المحددة."
+                                    : "Quick ideas and selected moments from the selected episode."}
                             </p>
                         </div>
                         <div className="hidden items-center gap-2 sm:flex" dir="ltr">
@@ -390,7 +399,7 @@ export default function PodcastPage() {
                         onDragStart={(event) => event.preventDefault()}
                         className="mt-5 flex cursor-grab snap-x snap-proximity select-none gap-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-5 touch-pan-x active:cursor-grabbing [scrollbar-color:rgba(255,255,255,0.25)_transparent] [scrollbar-width:thin]"
                     >
-                        {YOUTUBE_SHORTS.map((short) => (
+                        {activeEpisodeShorts.map((short) => (
                             <button
                                 key={short.videoId}
                                 type="button"

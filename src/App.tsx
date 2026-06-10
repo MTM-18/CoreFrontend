@@ -6,9 +6,10 @@ const ProductPage = lazy(() => import("./pages/ProductPage"));
 const WorkspacePage = lazy(() => import("./pages/WorkspacePage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
-const ComingSoonPage = lazy(() => import("./pages/ComingSoonPage"));
 const StylizedGlobe = lazy(() => import("./pages/StylizedGlobe"));
 const PodcastPage = lazy(() => import("./pages/PodcastPage"));
+const SuccessStoriesPage = lazy(() => import("./pages/SuccessStoriesPage"));
+const ReportsPage = lazy(() => import("./pages/ReportsPage"));
 
 import Navbar from "./compnents/layout/Navbar";
 import Footer from "./compnents/layout/Footer";
@@ -56,9 +57,10 @@ export default function App() {
                 <Route path="about" element={<AboutPage />} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="podcast" element={<PodcastPage />} />
-                <Route path="reports" element={<ComingSoonPage titleKey="nav.reports" />} />
-                <Route path="certificates" element={<ComingSoonPage titleKey="nav.certificates" />} />
-                <Route path="blog" element={<ComingSoonPage titleKey="nav.blog" />} />
+                <Route path="reports" element={<ReportsPage />} />
+                <Route path="stories" element={<SuccessStoriesPage />} />
+                <Route path="certificates" element={<Navigate to="/home/stories" replace />} />
+                <Route path="blog" element={<Navigate to="/home/stories" replace />} />
             </Route>
 
             <Route path="/product" element={<Navigate to="/home/product" replace />} />
@@ -67,8 +69,9 @@ export default function App() {
             <Route path="/contact" element={<Navigate to="/home/contact" replace />} />
             <Route path="/podcast" element={<Navigate to="/home/podcast" replace />} />
             <Route path="/reports" element={<Navigate to="/home/reports" replace />} />
-            <Route path="/certificates" element={<Navigate to="/home/certificates" replace />} />
-            <Route path="/blog" element={<Navigate to="/home/blog" replace />} />
+            <Route path="/stories" element={<Navigate to="/home/stories" replace />} />
+            <Route path="/certificates" element={<Navigate to="/home/stories" replace />} />
+            <Route path="/blog" element={<Navigate to="/home/stories" replace />} />
 
             <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
