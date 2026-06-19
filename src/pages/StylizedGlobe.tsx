@@ -6,7 +6,7 @@ import * as topojson from "topojson-client";
 import * as THREE from "three";
 import { useNavigate } from "react-router-dom";
 
-import BackgroundOrbits from "../compnents/layout/BackgroundOrbits";
+import BackgroundOrbits from "../components/layout/BackgroundOrbits";
 import coreLogo from "../assets/logo/fullWhiteLogo.svg";
 
 const WORLD_TOPO = `${import.meta.env.BASE_URL}data/countries-110m.json`;

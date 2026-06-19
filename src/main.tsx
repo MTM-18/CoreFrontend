@@ -4,7 +4,7 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
-import "./compnents/language/i18n";
+import "./components/language/i18n";
 
 document.documentElement.classList.add("dark");
 localStorage.setItem("theme", "dark");

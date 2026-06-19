@@ -1,10 +1,10 @@
-import PageShell from "../compnents/layout/PageShell";
-import Hero from "../compnents/sections/HomePageComponents/Hero";
-import AboutSection from "../compnents/sections/HomePageComponents/AboutSection";
-import ServiceSection from "../compnents/sections/HomePageComponents/OurServices";
-import NewsSection from "../compnents/sections/HomePageComponents/NewsSection";
-import TestimonialsSection from "../compnents/sections/HomePageComponents/TestimonialsSection";
-import AchievementsSection from "../compnents/sections/HomePageComponents/AchievementSection";
+import PageShell from "../components/layout/PageShell";
+import Hero from "../components/sections/HomePageComponents/Hero";
+import AboutSection from "../components/sections/HomePageComponents/AboutSection";
+import ServiceSection from "../components/sections/HomePageComponents/OurServices";
+import NewsSection from "../components/sections/HomePageComponents/NewsSection";
+import TestimonialsSection from "../components/sections/HomePageComponents/TestimonialsSection";
+import AchievementsSection from "../components/sections/HomePageComponents/AchievementSection";
 
 export default function HomePage() {
     return (

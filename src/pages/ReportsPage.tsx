@@ -1,46 +1,49 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-    FaArrowUpRightFromSquare,
     FaCalendarDays,
     FaDownload,
     FaEye,
     FaFileLines,
     FaFilePdf,
 } from "react-icons/fa6";
-import { useTranslation } from "react-i18next";
 
-import PageShell from "../compnents/layout/PageShell";
-import coreReportCover from "../assets/reports/core-2025-report.png";
-import programmingReportCover from "../assets/reports/programming-report.png";
-
-const REPORTS = [
-    {
-        id: "1eZz_EfRrp96CKyt_wrvOMn26746ksAKj",
-        title: { en: "Core 2025 Report", ar: "تقرير كور 2025" },
-        description: {
-            en: "A visual overview of Core Istanbul's programs, milestones, and impact throughout 2025.",
-            ar: "نظرة بصرية شاملة على برامج كور إسطنبول وإنجازاتها وأثرها خلال عام 2025.",
-        },
-        cover: coreReportCover,
-        type: { en: "Annual Report", ar: "تقرير سنوي" },
-        year: "2025",
-    },
-    {
-        id: "1OYgh6yQ_L0XKDmxdq4ANmHFx7CFfrRCH",
-        title: { en: "Programming Program Report", ar: "تقرير برنامج البرمجة" },
-        description: {
-            en: "Highlights, outcomes, and participant progress from Core Istanbul's programming program.",
-            ar: "أبرز النتائج والمخرجات وتطور المشاركين في برنامج البرمجة لدى كور إسطنبول.",
-        },
-        cover: programmingReportCover,
-        type: { en: "Program Report", ar: "تقرير برنامج" },
-        year: "2025",
-    },
-] as const;
+import { useCmsItems } from "../cms/useCmsItems";
+import PageShell from "../components/layout/PageShell";
+import SearchFilterBar from "../components/ui/SearchFilterBar";
+import SectionEyebrow from "../components/ui/SectionEyebrow";
 
 export default function ReportsPage() {
     const { i18n } = useTranslation();
     const lang = i18n.language.startsWith("ar") ? "ar" : "en";
     const isAr = lang === "ar";
+    const [search, setSearch] = useState("");
+    const [activeFilter, setActiveFilter] = useState("all");
+    const cmsReports = useCmsItems("reports");
+    const cmsFilters = useCmsItems("filters").filter((filter) => filter.program === "reports");
+    const reports = cmsReports.map((report) => ({
+        id: report.id,
+        title: { en: report.title_en, ar: report.title_ar },
+        description: { en: report.body_en, ar: report.body_ar },
+        cover: report.image_path,
+        type: { en: report.subtitle_en || "Report", ar: report.subtitle_ar || "تقرير" },
+        year: report.published_at.slice(0, 4),
+        viewUrl: report.media_path || report.external_url,
+        downloadUrl: report.media_path || report.external_url,
+        filterId: report.filter_id,
+    }));
+    const filters = cmsFilters.map((filter) => ({
+        id: filter.id,
+        label: lang === "ar" ? filter.title_ar : filter.title_en,
+    }));
+    const selectedFilter = activeFilter === "all" || filters.some((filter) => filter.id === activeFilter)
+        ? activeFilter
+        : "all";
+    const normalizedSearch = search.trim().toLocaleLowerCase();
+    const visibleReports = reports.filter((report) => {
+        const text = `${report.title[lang]} ${report.description[lang]} ${report.type[lang]}`.toLocaleLowerCase();
+        return (selectedFilter === "all" || report.filterId === selectedFilter) && (!normalizedSearch || text.includes(normalizedSearch));
+    });
 
     return (
         <PageShell>
@@ -50,23 +53,34 @@ export default function ReportsPage() {
             >
                 <div className="mx-auto w-full max-w-6xl">
                     <div className="max-w-3xl">
-                        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-core-accent">
-                            {isAr ? "المعرفة والأثر" : "Knowledge and impact"}
-                        </p>
+                        <SectionEyebrow>{isAr ? "المعرفة والأثر" : "Core reports"}</SectionEyebrow>
                         <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">
                             {isAr ? "التقارير" : "Reports"}
                         </h1>
                         <p className="mt-4 text-sm leading-7 text-core-textDark/80 dark:text-white/80 md:text-base">
                             {isAr
-                                ? "استكشف تقاريرنا، اطّلع عليها مباشرة، أو نزّل نسخة للاحتفاظ بها."
+                                ? "استكشف تقاريرنا، اطلع عليها مباشرة، أو نزل نسخة للاحتفاظ بها."
                                 : "Explore our publications, view them online, or download a copy to keep."}
                         </p>
                     </div>
 
-                    <div className="mt-8 space-y-5 sm:mt-10">
-                        {REPORTS.map((report, index) => {
-                            const viewUrl = `https://drive.google.com/file/d/${report.id}/view`;
-                            const downloadUrl = `https://drive.google.com/uc?export=download&id=${report.id}`;
+                    <SearchFilterBar
+                        search={search}
+                        onSearch={setSearch}
+                        searchPlaceholder={isAr ? "ابحث في التقارير" : "Search reports"}
+                        filter={selectedFilter}
+                        onFilter={setActiveFilter}
+                        filterPlaceholder={isAr ? "كل التصنيفات" : "All filters"}
+                        options={[
+                            { value: "all", label: isAr ? "كل التصنيفات" : "All filters" },
+                            ...filters.map((filter) => ({ value: filter.id, label: filter.label })),
+                        ]}
+                    />
+
+                    <div className="mt-6 space-y-5">
+                        {visibleReports.map((report, index) => {
+                            const viewUrl = report.viewUrl;
+                            const downloadUrl = report.downloadUrl;
                             return (
                                 <article
                                     key={report.id}
@@ -74,30 +88,23 @@ export default function ReportsPage() {
                                     style={{ transform: "translateZ(0)" }}
                                 >
                                     <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_12%_15%,white_0,transparent_30%),radial-gradient(circle_at_88%_85%,#ff7b27_0,transparent_32%)]" />
-                                    <a
-                                        href={viewUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="relative block min-h-72 overflow-hidden sm:min-h-0"
-                                        aria-label={`${isAr ? "عرض" : "View"} ${report.title[lang]}`}
-                                    >
+                                    <div className="relative block min-h-72 overflow-hidden sm:min-h-0">
                                         <img
                                             src={report.cover}
                                             alt={`${report.title[lang]} cover`}
                                             className="absolute inset-0 h-full w-full object-cover object-top"
+                                            loading={index === 0 ? "eager" : "lazy"}
+                                            decoding="async"
                                         />
                                         <span className="absolute start-3 top-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/45 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md">
                                             <FaFilePdf />
                                             {isAr ? "تقرير كور" : "Core report"}
                                         </span>
-                                        <span className="absolute bottom-3 end-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-core-brand shadow-[0_10px_26px_rgba(0,0,0,0.32)] transition group-hover:scale-105">
-                                            <FaArrowUpRightFromSquare />
-                                        </span>
-                                    </a>
+                                    </div>
 
                                     <div className="relative flex flex-col justify-center p-5 text-white sm:p-6 lg:px-8 lg:py-6">
                                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-core-accent">
-                                            {isAr ? `الإصدار ${index + 1}` : `Publication 0${index + 1}`}
+                                            {isAr ? `الإصدار ${index + 1}` : `Publication ${String(index + 1).padStart(2, "0")}`}
                                         </p>
                                         <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-[1.65rem]">
                                             {report.title[lang]}
@@ -169,6 +176,13 @@ export default function ReportsPage() {
                             );
                         })}
                     </div>
+                    {visibleReports.length === 0 && (
+                        <p className="mt-8 text-center text-core-textDark/60 dark:text-white/60">
+                            {reports.length === 0
+                                ? (isAr ? "ستظهر التقارير هنا بعد نشرها من لوحة التحكم." : "Reports will appear here after they are published from the admin dashboard.")
+                                : (isAr ? "لا توجد نتائج." : "No matching reports.")}
+                        </p>
+                    )}
                 </div>
             </section>
         </PageShell>

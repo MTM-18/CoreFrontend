@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaChevronLeft, FaChevronRight, FaPlay, FaTimes, FaYoutube } from "react-icons/fa";
-import PageShell from "../compnents/layout/PageShell";
+import { FaChevronLeft, FaChevronRight, FaPlay, FaYoutube } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
+import PageShell from "../components/layout/PageShell";
+import { useCmsItems } from "../cms/useCmsItems";
+import SectionEyebrow from "../components/ui/SectionEyebrow";
 
 type LocalizedText = { en: string; ar: string };
 
@@ -19,139 +22,34 @@ type PodcastShort = {
     title: LocalizedText;
 };
 
-const EPISODES: Episode[] = [
-    {
-        number: 1,
-        videoId: "-0N8RswPKso",
-        title: {
-            en: "From Silicon Valley to Istanbul: A Recipe for Building Startups",
-            ar: "من وادي السيليكون إلى إسطنبول: وصفة بناء الشركات الناشئة",
-        },
-        guest: {
-            en: "Niels Nielsen, entrepreneur and entrepreneurship leader",
-            ar: "نيلز نيلسن (Niels Nielsen)، رائد أعمال وقائد في مجال ريادة الأعمال",
-        },
-        description: {
-            en: "The episode explores the right steps for raising funds and when founders should move from bootstrapping to angel investment. It also discusses startup collaboration through shared solutions, market integration, and unified purchasing power.",
-            ar: "ناقشت الحلقة الخطوات الصحيحة لجمع التمويل ومتى يجب على رائد الأعمال الانتقال من التمويل الذاتي إلى المستثمرين الملائكيين، مع التركيز على وضوح القيمة المضافة والتعاون بين الشركات الناشئة في الحلول والأسواق والقوة الشرائية.",
-        },
-    },
-    {
-        number: 2,
-        videoId: "MTM7acSSqMM",
-        title: {
-            en: "From Nuclear Engineering to Youth Empowerment and Entrepreneurship",
-            ar: "من هندسة الطاقة النووية إلى تمكين الشباب وريادة الأعمال",
-        },
-        guest: {
-            en: "Engineer Ayman Jarwan, founder and president of Yoho Work",
-            ar: "المهندس أيمن جروان، مؤسس ورئيس منصة Yoho Work",
-        },
-        description: {
-            en: "Ayman shares his journey from studying nuclear engineering in the United States to entrepreneurship and economic empowerment. The conversation covers service exports, connecting youth in crisis-affected areas to global markets, and the importance of patience when building a career.",
-            ar: "استعرض المهندس أيمن رحلته من دراسة الهندسة النووية في أمريكا إلى ريادة الأعمال والتمكين الاقتصادي، وفلسفة تصدير الخدمات وربط الشباب في مناطق الأزمات بالسوق العالمي، مع التأكيد على الصبر وعدم حرق المراحل.",
-        },
-    },
-];
-
-const YOUTUBE_SHORTS: PodcastShort[] = [
-    {
-        videoId: "s1OQW7W-R-w",
-        episode: 1,
-        title: {
-            en: "Three questions to answer before asking for investment",
-            ar: "ثلاثة أسئلة يجب أن تجيب عنها قبل طلب أي استثمار",
-        },
-    },
-    {
-        videoId: "pANINpWMNUg",
-        episode: 1,
-        title: {
-            en: "How do you value your company correctly?",
-            ar: "كيف تُقيّم شركتك بطريقة صحيحة؟",
-        },
-    },
-    {
-        videoId: "VdtRe1oQ_CU",
-        episode: 1,
-        title: {
-            en: "What you want from your business determines its size",
-            ar: "ما تريده من مشروعك هو ما يحدد حجمه",
-        },
-    },
-    {
-        videoId: "VzQeDWjnPTs",
-        episode: 1,
-        title: {
-            en: "From 800 million to only 2.5 dollars: timing matters",
-            ar: "من 800 مليون إلى 2.5 دولار فقط، والسبب التوقيت",
-        },
-    },
-    {
-        videoId: "dKgQbILblao",
-        episode: 1,
-        title: {
-            en: "What I would do immediately as an entrepreneur in Turkey",
-            ar: "لو كنت رائد أعمال في تركيا لفعلت هذا فوراً",
-        },
-    },
-    {
-        videoId: "3ff4u4zdvj4",
-        episode: 1,
-        title: {
-            en: "Fear of sharing can stop a business from growing",
-            ar: "الخوف من المشاركة أحد أسباب فشل نمو المشاريع",
-        },
-    },
-    {
-        videoId: "hGUk88IdSWk",
-        episode: 2,
-        title: {
-            en: "From a small room at home to working with the global market",
-            ar: "من غرفة صغيرة في بلدي إلى العمل مع السوق العالمي، كيف؟",
-        },
-    },
-    {
-        videoId: "hBqFtoUqsg8",
-        episode: 2,
-        title: {
-            en: "Skills are the new currency of the labor market",
-            ar: "المهارة، عملة سوق العمل الجديدة",
-        },
-    },
-    {
-        videoId: "WIbKiX_r3iA",
-        episode: 2,
-        title: {
-            en: "Changing career paths is easier today than ever",
-            ar: "تغيير المسار المهني اليوم أسهل من أي وقت مضى",
-        },
-    },
-    {
-        videoId: "QUCpNC_ISjo",
-        episode: 2,
-        title: {
-            en: "Real education teaches us how to think",
-            ar: "في التعليم الحقيقي، نتعلّم كيف نفكّر، لا ماذا نفكّر",
-        },
-    },
-    {
-        videoId: "rhiEeuFPoN0",
-        episode: 2,
-        title: {
-            en: "Failure is not the end, but the beginning of success",
-            ar: "الفشل ليس النهاية، بل هو بداية قصة نجاحك",
-        },
-    },
-];
-
 const thumbnailUrl = (videoId: string) => `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+function youtubeId(url: string) {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&/]+)/);
+    return match?.[1] || url;
+}
 
 export default function PodcastPage() {
     const { i18n } = useTranslation();
     const lang = i18n.language.startsWith("ar") ? "ar" : "en";
     const isAr = lang === "ar";
-    const [activeVideoId, setActiveVideoId] = useState(EPISODES[0].videoId);
+    const cmsEpisodes = useCmsItems("podcasts");
+    const episodes: Episode[] = cmsEpisodes.map((episode, index) => ({
+        number: index + 1,
+        videoId: youtubeId(episode.external_url || episode.media_path),
+        title: { en: episode.title_en, ar: episode.title_ar },
+        guest: { en: episode.subtitle_en, ar: episode.subtitle_ar },
+        description: { en: episode.body_en, ar: episode.body_ar },
+    }));
+    const cmsShorts: PodcastShort[] = cmsEpisodes.flatMap((episode, episodeIndex) =>
+        (episode.shorts || []).map((short) => ({
+            videoId: youtubeId(short.youtube_url),
+            episode: episodeIndex + 1,
+            title: { en: short.title_en, ar: short.title_ar },
+        }))
+    );
+    const shorts = cmsShorts;
+    const [activeVideoId, setActiveVideoId] = useState("");
     const [activeShort, setActiveShort] = useState<PodcastShort | null>(null);
     const shortsRef = useRef<HTMLDivElement | null>(null);
     const shortsDragRef = useRef({
@@ -165,10 +63,10 @@ export default function PodcastPage() {
         pointerId: -1,
     });
     const suppressShortClickRef = useRef(false);
-    const activeEpisode = EPISODES.find((episode) => episode.videoId === activeVideoId) ?? EPISODES[0];
-    const activeEpisodeShorts = YOUTUBE_SHORTS.filter(
-        (short) => short.episode === activeEpisode.number
-    );
+    const activeEpisode = episodes.find((episode) => episode.videoId === activeVideoId) ?? episodes[0];
+    const activeEpisodeShorts = activeEpisode
+        ? shorts.filter((short) => short.episode === activeEpisode.number)
+        : [];
 
     const selectEpisode = (videoId: string) => {
         setActiveVideoId(videoId);
@@ -275,13 +173,14 @@ export default function PodcastPage() {
                 dir={isAr ? "rtl" : "ltr"}
             >
                 <header className="max-w-5xl py-3 md:py-5">
+                    <SectionEyebrow>{isAr ? "بودكاست كور" : "Core podcast"}</SectionEyebrow>
                     <h1 className="text-3xl font-semibold leading-tight text-white md:text-5xl">
                         {isAr ? "حوارات ملهمة وتجارب حقيقية" : "Real Stories. Practical Conversations."}
                     </h1>
                     <div className="mt-4 h-1 w-20 rounded-full bg-gradient-to-r from-core-brand to-core-accent" />
                 </header>
 
-                <section className="mt-3">
+                {activeEpisode ? <section className="mt-3">
                     <h2 className="mb-4 text-xl font-semibold text-white md:text-2xl">
                         {isAr ? "أحدث الحلقات" : "Latest Episodes"}
                     </h2>
@@ -295,6 +194,7 @@ export default function PodcastPage() {
                                 className="h-full w-full"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerPolicy="strict-origin-when-cross-origin"
+                                loading="lazy"
                                 allowFullScreen
                             />
                         </div>
@@ -314,7 +214,7 @@ export default function PodcastPage() {
                                     {isAr ? "الحلقات التالية" : "Next Episodes"}
                                 </div>
                                 <div className="grid gap-px bg-white/10 md:grid-cols-2">
-                                    {EPISODES.map((episode) => {
+                                    {episodes.map((episode) => {
                                         const isActive = episode.videoId === activeEpisode.videoId;
                                         return (
                                             <button
@@ -352,9 +252,13 @@ export default function PodcastPage() {
                             </div>
                         </aside>
                     </div>
-                </section>
+                </section> : (
+                    <p className="mt-8 text-center text-white/65">
+                        {isAr ? "ستظهر حلقات البودكاست هنا بعد نشرها من لوحة التحكم." : "Podcast episodes will appear here after they are published from the admin dashboard."}
+                    </p>
+                )}
 
-                <section className="mt-14">
+                {activeEpisode && activeEpisodeShorts.length > 0 && <section className="mt-14">
                     <div className="flex items-end justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2">
@@ -432,7 +336,7 @@ export default function PodcastPage() {
                             </button>
                         ))}
                     </div>
-                </section>
+                </section>}
             </section>
 
             {activeShort && (
@@ -458,9 +362,9 @@ export default function PodcastPage() {
                                     type="button"
                                     onClick={() => setActiveShort(null)}
                                     aria-label={isAr ? "إغلاق" : "Close"}
-                                    className="grid h-8 w-8 shrink-0 place-items-center text-white/80 transition hover:text-white"
+                                    className="grid h-8 w-8 shrink-0 place-items-center text-core-accent transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-core-accent"
                                 >
-                                    <FaTimes />
+                                    <FaXmark className="text-xl drop-shadow-[0_4px_14px_rgba(0,0,0,.7)]" />
                                 </button>
                             </div>
                             <div className="aspect-[9/16] w-full bg-black">
@@ -470,6 +374,7 @@ export default function PodcastPage() {
                                     className="h-full w-full"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     referrerPolicy="strict-origin-when-cross-origin"
+                                    loading="lazy"
                                     allowFullScreen
                                 />
                             </div>

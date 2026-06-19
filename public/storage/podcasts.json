@@ -1,0 +1,114 @@
+[
+  {
+    "id": "podcast-episode-1",
+    "collection": "podcasts",
+    "title_en": "From Silicon Valley to Istanbul: A Recipe for Building Startups",
+    "title_ar": "من وادي السيليكون إلى إسطنبول: وصفة بناء الشركات الناشئة",
+    "body_en": "The episode explores the right steps for raising funds and when founders should move from bootstrapping to angel investment. It also discusses startup collaboration through shared solutions, market integration, and unified purchasing power.",
+    "body_ar": "ناقشت الحلقة الخطوات الصحيحة لجمع التمويل ومتى يجب على رائد الأعمال الانتقال من التمويل الذاتي إلى المستثمرين الملائكيين، مع التركيز على وضوح القيمة المضافة والتعاون بين الشركات الناشئة في الحلول والأسواق والقوة الشرائية.",
+    "subtitle_en": "Niels Nielsen, entrepreneur and entrepreneurship leader",
+    "subtitle_ar": "نيلز نيلسن (Niels Nielsen)، رائد أعمال وقائد في مجال ريادة الأعمال",
+    "image_path": "",
+    "media_path": "",
+    "external_url": "https://www.youtube.com/watch?v=-0N8RswPKso",
+    "program": "",
+    "published_at": "2026-06-12",
+    "published": true,
+    "featured": false,
+    "sort_order": 0,
+    "filter_id": "",
+    "shorts": [
+      {
+        "id": "episode-1-short-1",
+        "title_en": "Three questions to answer before asking for investment",
+        "title_ar": "ثلاثة أسئلة يجب أن تجيب عنها قبل طلب أي استثمار",
+        "youtube_url": "https://www.youtube.com/shorts/s1OQW7W-R-w"
+      },
+      {
+        "id": "episode-1-short-2",
+        "title_en": "How do you value your company correctly?",
+        "title_ar": "كيف تُقيّم شركتك بطريقة صحيحة؟",
+        "youtube_url": "https://www.youtube.com/shorts/pANINpWMNUg"
+      },
+      {
+        "id": "episode-1-short-3",
+        "title_en": "What you want from your business determines its size",
+        "title_ar": "ما تريده من مشروعك هو ما يحدد حجمه",
+        "youtube_url": "https://www.youtube.com/shorts/VdtRe1oQ_CU"
+      },
+      {
+        "id": "episode-1-short-4",
+        "title_en": "From 800 million to only 2.5 dollars: timing matters",
+        "title_ar": "من 800 مليون إلى 2.5 دولار فقط، والسبب التوقيت",
+        "youtube_url": "https://www.youtube.com/shorts/VzQeDWjnPTs"
+      },
+      {
+        "id": "episode-1-short-5",
+        "title_en": "What I would do immediately as an entrepreneur in Turkey",
+        "title_ar": "لو كنت رائد أعمال في تركيا لفعلت هذا فوراً",
+        "youtube_url": "https://www.youtube.com/shorts/dKgQbILblao"
+      },
+      {
+        "id": "episode-1-short-6",
+        "title_en": "Fear of sharing can stop a business from growing",
+        "title_ar": "الخوف من المشاركة أحد أسباب فشل نمو المشاريع",
+        "youtube_url": "https://www.youtube.com/shorts/3ff4u4zdvj4"
+      }
+    ],
+    "created_at": "2026-06-12T12:00:00Z",
+    "updated_at": "2026-06-12T12:00:00Z"
+  },
+  {
+    "id": "podcast-episode-2",
+    "collection": "podcasts",
+    "title_en": "From Nuclear Engineering to Youth Empowerment and Entrepreneurship",
+    "title_ar": "من هندسة الطاقة النووية إلى تمكين الشباب وريادة الأعمال",
+    "body_en": "Ayman shares his journey from studying nuclear engineering in the United States to entrepreneurship and economic empowerment. The conversation covers service exports, connecting youth in crisis-affected areas to global markets, and the importance of patience when building a career.",
+    "body_ar": "استعرض المهندس أيمن رحلته من دراسة الهندسة النووية في أمريكا إلى ريادة الأعمال والتمكين الاقتصادي، وفلسفة تصدير الخدمات وربط الشباب في مناطق الأزمات بالسوق العالمي، مع التأكيد على الصبر وعدم حرق المراحل.",
+    "subtitle_en": "Engineer Ayman Jarwan, founder and president of Yoho Work",
+    "subtitle_ar": "المهندس أيمن جروان، مؤسس ورئيس منصة Yoho Work",
+    "image_path": "",
+    "media_path": "",
+    "external_url": "https://www.youtube.com/watch?v=MTM7acSSqMM",
+    "program": "",
+    "published_at": "2026-06-12",
+    "published": true,
+    "featured": false,
+    "sort_order": 1,
+    "filter_id": "",
+    "shorts": [
+      {
+        "id": "episode-2-short-1",
+        "title_en": "From a small room at home to working with the global market",
+        "title_ar": "من غرفة صغيرة في بلدي إلى العمل مع السوق العالمي، كيف؟",
+        "youtube_url": "https://www.youtube.com/shorts/hGUk88IdSWk"
+      },
+      {
+        "id": "episode-2-short-2",
+        "title_en": "Skills are the new currency of the labor market",
+        "title_ar": "المهارة، عملة سوق العمل الجديدة",
+        "youtube_url": "https://www.youtube.com/shorts/hBqFtoUqsg8"
+      },
+      {
+        "id": "episode-2-short-3",
+        "title_en": "Changing career paths is easier today than ever",
+        "title_ar": "تغيير المسار المهني اليوم أسهل من أي وقت مضى",
+        "youtube_url": "https://www.youtube.com/shorts/WIbKiX_r3iA"
+      },
+      {
+        "id": "episode-2-short-4",
+        "title_en": "Real education teaches us how to think",
+        "title_ar": "في التعليم الحقيقي، نتعلّم كيف نفكّر، لا ماذا نفكّر",
+        "youtube_url": "https://www.youtube.com/shorts/QUCpNC_ISjo"
+      },
+      {
+        "id": "episode-2-short-5",
+        "title_en": "Failure is not the end, but the beginning of success",
+        "title_ar": "الفشل ليس النهاية، بل هو بداية قصة نجاحك",
+        "youtube_url": "https://www.youtube.com/shorts/rhiEeuFPoN0"
+      }
+    ],
+    "created_at": "2026-06-12T12:00:00Z",
+    "updated_at": "2026-06-12T12:00:00Z"
+  }
+]

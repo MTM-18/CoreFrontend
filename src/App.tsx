@@ -10,10 +10,13 @@ const StylizedGlobe = lazy(() => import("./pages/StylizedGlobe"));
 const PodcastPage = lazy(() => import("./pages/PodcastPage"));
 const SuccessStoriesPage = lazy(() => import("./pages/SuccessStoriesPage"));
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
+const CertificatesPage = lazy(() => import("./pages/CertificatesPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
 
-import Navbar from "./compnents/layout/Navbar";
-import Footer from "./compnents/layout/Footer";
-import BackgroundOrbits from "./compnents/layout/BackgroundOrbits";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import BackgroundOrbits from "./components/layout/BackgroundOrbits";
+import RouteScrollManager from "./components/layout/RouteScrollManager";
 
 function RouteLoader() {
     return (
@@ -26,6 +29,7 @@ function RouteLoader() {
 function SiteLayout() {
     return (
         <div className="app-shell min-h-screen flex flex-col text-core-textDark dark:text-core-textLight">
+            <RouteScrollManager />
             <BackgroundOrbits />
             <Navbar />
             <main className="flex-1 pt-16">
@@ -41,6 +45,14 @@ function SiteLayout() {
 export default function App() {
     return (
         <Routes>
+            <Route
+                path="/admin"
+                element={
+                    <Suspense fallback={<RouteLoader />}>
+                        <AdminPage />
+                    </Suspense>
+                }
+            />
             <Route
                 path="/"
                 element={
@@ -59,7 +71,7 @@ export default function App() {
                 <Route path="podcast" element={<PodcastPage />} />
                 <Route path="reports" element={<ReportsPage />} />
                 <Route path="stories" element={<SuccessStoriesPage />} />
-                <Route path="certificates" element={<Navigate to="/home/stories" replace />} />
+                <Route path="certificates" element={<CertificatesPage />} />
                 <Route path="blog" element={<Navigate to="/home/stories" replace />} />
             </Route>
 
@@ -70,7 +82,7 @@ export default function App() {
             <Route path="/podcast" element={<Navigate to="/home/podcast" replace />} />
             <Route path="/reports" element={<Navigate to="/home/reports" replace />} />
             <Route path="/stories" element={<Navigate to="/home/stories" replace />} />
-            <Route path="/certificates" element={<Navigate to="/home/stories" replace />} />
+            <Route path="/certificates" element={<Navigate to="/home/certificates" replace />} />
             <Route path="/blog" element={<Navigate to="/home/stories" replace />} />
 
             <Route path="*" element={<Navigate to="/home" replace />} />

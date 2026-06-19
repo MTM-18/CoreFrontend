@@ -1,5 +1,5 @@
-import PageShell from "../compnents/layout/PageShell";
-import ProgramsPage from "../compnents/sections/CoreProComponents/programPage";
+import PageShell from "../components/layout/PageShell";
+import ProgramsPage from "../components/sections/CoreProComponents/programPage";
 
 export default function ProductPage() {
     return (

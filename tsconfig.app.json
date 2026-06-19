@@ -29,7 +29,6 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src",
-    "src/compnents/sections/AboutUsComponents/ValuesSection.tsx"
+    "src"
   ]
 }

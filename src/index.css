@@ -1,6 +1,5 @@
 /* 1) Import custom CSS BEFORE Tailwind layers */
 @import "./styles/tokens.css";
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Quicksand:wght@300..700&display=swap');
 
 
@@ -19,7 +18,7 @@ html[lang="en"] body {
 
 /* 3) Global styles */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 5rem;
 }
 
